@@ -26,7 +26,11 @@ jobs:
       - name: Install Tools & Dependencies
         uses: ./.github/actions/install
 
-      - name: Build
+      - name: Build Thorin Core
+        working-directory: ./packages/thorin-core
+        run: pnpm run build
+
+      - name: Build Web
         working-directory: ./web
         run: pnpm run build
 
