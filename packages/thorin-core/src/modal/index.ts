@@ -9,6 +9,9 @@ export class ThorinModal extends LitElement {
     @property({ type: String })
     modalTitle = '';
 
+    @property({ type: Boolean })
+    closeOnRequest = true;
+
     static styles = css`
         :host {
             display: none;
@@ -35,6 +38,9 @@ export class ThorinModal extends LitElement {
             align-items: center;
             position: fixed;
             max-width: 100%;
+            outline: none;
+            border: none;
+            background: transparent;
         }
         .modal {
             transition: all 250ms ease-out;
@@ -71,6 +77,16 @@ export class ThorinModal extends LitElement {
             font-size: 20px;
             padding-bottom: var(--thorin-spacing-2);
         }
+        dialog::backdrop {
+            background-image: linear-gradient(
+                45deg,
+                magenta,
+                rebeccapurple,
+                dodgerblue,
+                green
+            );
+            opacity: 0.75;
+        }
         /* Modal Breakpoint */
         @media (max-width: 576px) {
             .modal-container {
@@ -82,10 +98,12 @@ export class ThorinModal extends LitElement {
                 transform: unset;
                 height: auto;
                 align-items: flex-end;
+                width: calc(100% - var(--thorin-spacing-4));
+                overflow-y: auto;
+                max-height: calc(100vh - var(--thorin-spacing-4));
             }
             .modal {
                 /* max-height: 100vh; */
-                overflow-y: auto;
                 width: 100%;
 
                 max-width: 100%;
@@ -104,14 +122,18 @@ export class ThorinModal extends LitElement {
 
     render() {
         return html`
-            <div class="modal-container">
-                <div class="modal">
-                    <div class="content">
-                        <div class="title">${this.modalTitle}</div>
-                        <slot></slot>
+            <dialog open="${this.open}" class="modal-container" @close="${() =>
+            console.log('onClose')}" @click="${(event) => {
+            console.log('click', event);
+        }}">
+                    <div class="modal">
+                        <div class="content">
+                            <div class="title">${this.modalTitle}</div>
+                            <slot></slot>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </dialog>
         `;
     }
 

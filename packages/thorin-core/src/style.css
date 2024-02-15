@@ -37,37 +37,6 @@ p {
 }
 
 :root {
-    --ens-blue: #5298ff;
-    --ens-blue2: rgba(82, 152, 255, 0.6);
-    --ens-blue3: rgba(82, 152, 255, 0.25);
-    --ens-green: #49b393;
-    --ens-indigo: #5854d6;
-    --ens-orange: #ff9500;
-    --ens-pink: #ff2d55;
-    --ens-purple: #af52de;
-    --ens-red: #d55555;
-    --ens-teal: #5ac8fa;
-    --ens-yellow: #e8b811;
-    --ens-grey1: #f6f6f6;
-    --ens-grey2: #9b9ba7;
-    --ens-grey3: #454545;
-    --ens-gradient-blue: linear-gradient(
-        330.4deg,
-        #44bcf0 4.54%,
-        #7298f8 59.2%,
-        #a099ff 148.85%
-    );
-    --ens-gradient-purple: linear-gradient(
-        323.31deg,
-        #de82ff -15.56%,
-        #7f6aff 108.43%
-    );
-    --ens-gradient-green: linear-gradient(
-        323.31deg,
-        #73a6f2 -15.56%,
-        #42c2ab 108.43%
-    );
-
     --thorin-blue-primary: #3889FF;
     --thorin-blue-active: #003685;
     --thorin-blue-dim: #056AFF;
