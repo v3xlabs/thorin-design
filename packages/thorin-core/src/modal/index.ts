@@ -11,12 +11,16 @@ export class ThorinModal extends LitElement {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.17);
+            background: color-mix(
+                in srgb,
+                var(--thorin-grey-active) 20%,
+                transparent
+            );
             z-index: 1000;
             display: flex;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(14px);
             display: none; /* Initially hidden */
         }
         :host([open]) {
@@ -33,7 +37,7 @@ export class ThorinModal extends LitElement {
             transition: all 250ms ease-out;
             /* overflow: hidden; Smooth resizing */
             background: var(--thorin-background-primary);
-            padding: 16px;
+            padding: var(--thorin-spacing-4);
             border-radius: var(--thorin-radius-card);
             max-width: 100vw;
 
@@ -49,7 +53,7 @@ export class ThorinModal extends LitElement {
             overflow: visible;
             width: fit-content;
             height: fit-content;
-            min-width: 320px; /** Modal Min Width */
+            min-width: 360px; /** Modal Min Width */
         }
         /* Modal Breakpoint */
         @media (max-width: 576px) {

@@ -134,7 +134,8 @@ export class ThorinButton extends LitElement {
             border: var(--border);
             outline: none;
             border-radius: var(--thorin-radius-button);
-            padding: 10px 20px;
+            padding: 14px 16px;
+            font-weight: bold;
         }
         button.full {
             width: 100%;
