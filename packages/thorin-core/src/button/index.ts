@@ -22,14 +22,21 @@ export class ThorinButton extends LitElement {
             color: var(--thorin-text-accent);
             cursor: pointer;
         }
+        button:focus {
+            box-shadow: 0 0 0 2px var(--thorin-blue-bright);
+        }
     `;
 
     render() {
         return html`
-        <button>
+        <button @click="${this._onClick}">
             <slot></slot>
         </button>
         `;
+    }
+
+    private _onClick(e: PointerEvent) {
+        console.log('Button clicked', e);
     }
 }
 
