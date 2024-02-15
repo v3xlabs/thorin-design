@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-identical-functions */
 /* eslint-disable unicorn/no-nested-ternary */
 import { walletConnect } from '@wagmi/connectors';
 import { Connector, createConfig, getConnectors, http } from '@wagmi/core';
@@ -46,14 +47,19 @@ export class ThorinConnectModal extends LitElement {
             display: flex;
             justify-content: center;
             align-items: center;
+            aspect-ratio: 1/1;
+            width: 280px;
+
+            border-radius: var(--thorin-radius-card);
+            overflow: hidden;
         }
         .connected {
             padding: var(--thorin-spacing-4);
             background: var(--thorin-green-surface);
             color: var(--thorin-text-primary);
         }
-        .space-y-4 > *:not(:first-child) {
-            margin-top: var(--thorin-spacing-4);
+        .space-y-2 > *:last-child {
+            margin-top: var(--thorin-spacing-2);
         }
     `;
 
@@ -105,41 +111,79 @@ export class ThorinConnectModal extends LitElement {
     render() {
         return html`
             <thorin-modal ?open="${this.open}" title="Connect Wallet">
-                <div class="space-y-4">
+                <div class="space-y-2">
                     ${this.activeConnector && !this.connecting
-                        ? html`<div class="connected">Connected</div>`
+                        ? html`<div class="space-y-2">
+                              <div class="connected">Connected</div>
+                              <div>
+                                  <thorin-button
+                                      variant="subtle"
+                                      width="full"
+                                      .onClick="${() => {
+                                          this.activeConnector?.disconnect();
+                                          this.activeConnector = undefined;
+                                          this.connecting = false;
+                                          this.showQR = undefined;
+                                      }}"
+                                      >Disconnect</thorin-button
+                                  >
+                              </div>
+                          </div>`
                         : ''}
                     ${this.activeConnector && this.connecting
-                        ? this.activeConnector.type == 'walletConnect'
-                            ? html`<div class="connecting-to">
-                                  ${this.showQR
-                                      ? html`<div class="qr">
-                                            <qr-code
-                                                data="${this.showQR}"
-                                            ></qr-code>
-                                        </div>`
-                                      : ''}
+                        ? html`<div class="space-y-2">
+                              <div class="connecting-to">
+                                  ${this.activeConnector.type == 'walletConnect'
+                                      ? html`
+                                    ${
+                                        this.showQR
+                                            ? html`<div class="qr">
+                                                  <qr-code
+                                                      data="${this.showQR}"
+                                                  ></qr-code>
+                                              </div>`
+                                            : ''
+                                    }
                               </div>`
-                            : html`
-                                  <div class="connecting-to">
-                                      ${this.activeConnector.icon
-                                          ? html` <img
-                                                src="${this.activeConnector
-                                                    .icon}"
-                                                alt="${this.activeConnector
-                                                    .name}"
-                                            />`
-                                          : ''}
-                                      <div>
-                                          Connecting to
-                                          <span class="connector-name">
-                                              ${this.activeConnector.name}
-                                          </span>
+                                      : html`
+                                          ${
+                                              this.activeConnector.icon
+                                                  ? html` <img
+                                                        src="${this
+                                                            .activeConnector
+                                                            .icon}"
+                                                        alt="${this
+                                                            .activeConnector
+                                                            .name}"
+                                                    />`
+                                                  : ''
+                                          }
+                                          <div>
+                                              Connecting to
+                                              <span class="connector-name">
+                                                  ${this.activeConnector.name}
+                                              </span>
+                                          </div>
                                       </div>
-                                  </div>
-                              `
+                              `}
+                              </div>
+
+                              <div>
+                                  <thorin-button
+                                      variant="subtle"
+                                      width="full"
+                                      .onClick="${() => {
+                                          this.activeConnector?.disconnect();
+                                          this.activeConnector = undefined;
+                                          this.connecting = false;
+                                          this.showQR = undefined;
+                                      }}"
+                                      >Back</thorin-button
+                                  >
+                              </div>
+                          </div>`
                         : ''}
-                    ${!this.connecting
+                    ${!this.connecting && !this.activeConnector
                         ? html` <div class="button-list">
                               ${this.connectors.map(
                                   (connector) =>

@@ -120,7 +120,7 @@ export class ThorinButton extends LitElement {
         button {
             background: var(--bg);
             color: var(--color);
-            display: inline-flex;
+            display: flex;
             justify-content: center;
             gap: 4px;
             overflow: hidden;
