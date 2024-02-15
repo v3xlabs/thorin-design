@@ -217,6 +217,7 @@ export class ThorinConnectModal extends LitElement {
             .connect()
             .catch((error) => {
                 console.log('failed to connect', error);
+                this.activeConnector = undefined;
             })
             .finally(() => {
                 this.connecting = false;
