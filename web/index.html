@@ -12,6 +12,18 @@
     <thorin-button>hello world</thorin-button>
     <thorin-button>hello world</thorin-button>
     <thorin-button>hello world</thorin-button>
+    <thorin-modal open>
+        <p>Hello world</p>
+        <p id="big">This component gets bigger.</p>
+    </thorin-modal>
     <script src="./index.ts" type="module"></script>
+    <script>
+        let height = 5;
+        document.getElementById('big').addEventListener('click', () => {
+            height += 32;
+            document.getElementById('big').style.height = `${height}px`;
+            document.getElementById('big').style.width = `${Math.random() * 300 + 130}px`;
+        });
+    </script>
 </body>
 </html>

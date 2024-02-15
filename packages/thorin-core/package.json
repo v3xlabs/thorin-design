@@ -5,7 +5,8 @@
     "module": "dist/bundle.js",
     "types": "dist/index.d.ts",
     "scripts": {
-        "build": "rollup -c"
+        "build": "rollup -c",
+        "lint": "eslint -c .eslintrc.json --ext .ts ./src"
     },
     "keywords": [],
     "author": "V3X Labs BV.",
@@ -17,6 +18,9 @@
     "devDependencies": {
         "@rollup/plugin-node-resolve": "^15.2.3",
         "@rollup/plugin-typescript": "^11.1.6",
+        "@typescript-eslint/parser": "^7.0.1",
+        "eslint": "^8.56.0",
+        "eslint-plugin-v3xlabs": "^1.6.2",
         "rollup": "^4.10.0",
         "tslib": "^2.6.2",
         "typescript": "^5.3.3"

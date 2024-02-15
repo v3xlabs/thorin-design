@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
 @customElement('thorin-button')
@@ -17,7 +17,8 @@ export class ThorinButton extends LitElement {
             border-radius: 24px;
             padding: 8px 16px;
         }
-        button:hover, button:active {
+        button:hover,
+        button:active {
             background: var(--thorin-blue-bright);
             color: var(--thorin-text-accent);
             cursor: pointer;
@@ -29,14 +30,14 @@ export class ThorinButton extends LitElement {
 
     render() {
         return html`
-        <button @click="${this._onClick}">
-            <slot></slot>
-        </button>
+            <button @click="${this._onClick}">
+                <slot></slot>
+            </button>
         `;
     }
 
-    private _onClick(e: PointerEvent) {
-        console.log('Button clicked', e);
+    private _onClick(event: PointerEvent) {
+        console.log('Button clicked', event);
     }
 }
 
