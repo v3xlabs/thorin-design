@@ -100,15 +100,15 @@ export class ThorinModal extends LitElement {
                 const { height, width } = entry.contentRect;
 
                 console.log('Resize observed', height, width);
+
+                if (height == 0 && width == 0) return;
+
                 modal?.setAttribute(
                     'style',
-                    `--max-height: ${height + padding * 2}px; --max-width: ${width + padding * 2
+                    `--max-height: ${height + padding * 2}px; --max-width: ${
+                        width + padding * 2
                     }px`
                 );
-                // modalContent?.setAttribute(
-                //     'style',
-                //     `max-height: ${height}px; max-width: ${width}px`
-                // );
             }
         });
 
