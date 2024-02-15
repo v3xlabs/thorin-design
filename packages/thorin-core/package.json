@@ -14,7 +14,9 @@
     "license": "LGPL-3.0-only",
     "dependencies": {
         "@rollup/plugin-commonjs": "^25.0.7",
-        "lit": "^3.1.2"
+        "@rollup/plugin-json": "^6.1.0",
+        "lit": "^3.1.2",
+        "rollup-plugin-peer-deps-external": "^2.2.4"
     },
     "devDependencies": {
         "@rollup/plugin-node-resolve": "^15.2.3",

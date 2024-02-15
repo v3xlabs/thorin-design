@@ -154,13 +154,13 @@ export class ThorinButton extends LitElement {
     width: 'auto' | 'full' = 'auto';
 
     @property({ attribute: false })
-    onclick: (_event: PointerEvent) => void = () => { };
+    onClick: (_event: PointerEvent) => void = () => {};
 
     render() {
         return html`
             <button
                 @click="${this._onClick}"
-                class="${this.computeClass}"
+                class="${this.computeClass()}"
                 ?disabled="${this.variant == 'disabled'}"
             >
                 <slot></slot>
@@ -168,11 +168,11 @@ export class ThorinButton extends LitElement {
         `;
     }
 
-    private get computeClass() {
+    private computeClass() {
         return (
             [this.width === 'full' ? 'full' : '', this.computeVariant()]
                 .join(' ')
-                .trim() || undefined
+                .trim() || ''
         );
     }
 
@@ -189,8 +189,8 @@ export class ThorinButton extends LitElement {
     }
 
     private _onClick(event: PointerEvent) {
-        if (this.onclick) {
-            this.onclick(event);
+        if (this.onClick) {
+            this.onClick(event);
         }
     }
 }

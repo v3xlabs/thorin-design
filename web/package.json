@@ -12,7 +12,8 @@
     "author": "V3X Labs BV.",
     "license": "LGPL-3.0-only",
     "dependencies": {
+        "@ens-tools/thorin-core": "workspace:*",
         "vite": "^5.1.2",
-        "@ens-tools/thorin-core": "workspace:*"
+        "webcomponent-qr-code": "^1.2.0"
     }
 }
