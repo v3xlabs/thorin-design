@@ -6,7 +6,11 @@ settings:
 
 importers:
 
-  packages/thorin: {}
+  packages/thorin:
+    dependencies:
+      '@ens-tools/thorin-core':
+        specifier: workspace:*
+        version: link:../thorin-core
 
   packages/thorin-core:
     dependencies:
