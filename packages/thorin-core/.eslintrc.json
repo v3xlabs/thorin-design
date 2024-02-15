@@ -16,6 +16,7 @@
         "browser": true
     },
     "rules": {
-        "unicorn/template-indent": "off"
+        "unicorn/template-indent": "off",
+        "sonarjs/no-nested-template-literals": "off"
     }
 }

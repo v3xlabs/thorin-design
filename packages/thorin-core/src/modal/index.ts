@@ -6,6 +6,9 @@ export class ThorinModal extends LitElement {
     @property({ type: Boolean, reflect: true })
     open = false;
 
+    @property({ type: String })
+    title = '';
+
     static styles = css`
         :host {
             display: none;
@@ -62,6 +65,12 @@ export class ThorinModal extends LitElement {
             top: 50%;
             transform: translate(-50%, -50%);
         }
+        .title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 20px;
+            padding-bottom: var(--thorin-spacing-2);
+        }
         /* Modal Breakpoint */
         @media (max-width: 576px) {
             .modal-container {
@@ -98,6 +107,7 @@ export class ThorinModal extends LitElement {
             <div class="modal-container">
                 <div class="modal">
                     <div class="content">
+                        <div class="title">${this.title}</div>
                         <slot></slot>
                     </div>
                 </div>

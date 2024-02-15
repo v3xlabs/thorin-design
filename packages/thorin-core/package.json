@@ -4,6 +4,7 @@
     "main": "dist/bundle.js",
     "module": "dist/bundle.js",
     "types": "dist/index.d.ts",
+    "type": "module",
     "scripts": {
         "build": "rollup -c",
         "lint": "eslint -c .eslintrc.json --ext .ts ./src"
@@ -12,8 +13,8 @@
     "author": "V3X Labs BV.",
     "license": "LGPL-3.0-only",
     "dependencies": {
-        "lit": "^3.1.2",
-        "rollup-plugin-copy": "^3.5.0"
+        "@rollup/plugin-commonjs": "^25.0.7",
+        "lit": "^3.1.2"
     },
     "devDependencies": {
         "@rollup/plugin-node-resolve": "^15.2.3",
@@ -22,7 +23,13 @@
         "eslint": "^8.56.0",
         "eslint-plugin-v3xlabs": "^1.6.2",
         "rollup": "^4.10.0",
+        "rollup-plugin-copy": "^3.5.0",
         "tslib": "^2.6.2",
         "typescript": "^5.3.3"
+    },
+    "peerDependencies": {
+        "@wagmi/connectors": "^4.1.14",
+        "@wagmi/core": "^2.6.5",
+        "viem": "2.x"
     }
 }
