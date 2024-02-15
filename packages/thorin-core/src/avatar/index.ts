@@ -94,6 +94,7 @@ export class ThorinAvatar extends LitElement {
                   </svg>`
                 : html`<img
                       src="${avatarUrl}"
+                      loading="lazy"
                       @load="${this.handleLoad}"
                       @error="${this.handleError}"
                   />`}
