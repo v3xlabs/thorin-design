@@ -37,13 +37,14 @@ export class ThorinModal extends LitElement {
             transition: all 250ms ease-out;
             /* overflow: hidden; Smooth resizing */
             background: var(--thorin-background-primary);
-            padding: var(--thorin-spacing-4);
             border-radius: var(--thorin-radius-card);
             max-width: 100vw;
 
-            width: auto;
+            width: var(--max-width);
+            height: var(--max-height);
             box-sizing: border-box;
             overflow: hidden;
+            position: relative;
 
             max-width: var(--max-width);
             max-height: var(--max-height);
@@ -54,6 +55,12 @@ export class ThorinModal extends LitElement {
             width: fit-content;
             height: fit-content;
             min-width: 360px; /** Modal Min Width */
+
+            padding: var(--thorin-spacing-4);
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
         }
         /* Modal Breakpoint */
         @media (max-width: 576px) {
@@ -78,6 +85,10 @@ export class ThorinModal extends LitElement {
             .content {
                 width: 100%;
                 min-width: 0;
+                max-width: calc(
+                    calc(100% - var(--thorin-spacing-2)) -
+                        var(--thorin-spacing-4)
+                );
             }
         }
     `;
