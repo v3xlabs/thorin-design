@@ -66,12 +66,6 @@ export class ThorinTag extends LitElement {
     private get computeClass() {
         return ['tag', this.variant].join(' ').trim() || undefined;
     }
-
-    private _onClick(event: PointerEvent) {
-        if (this.onclick) {
-            this.onclick(event);
-        }
-    }
 }
 
 declare global {
