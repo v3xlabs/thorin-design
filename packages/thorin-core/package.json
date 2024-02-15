@@ -5,6 +5,7 @@
     "module": "dist/bundle.js",
     "types": "dist/index.d.ts",
     "type": "module",
+    "private": "false",
     "scripts": {
         "build": "rollup -c",
         "lint": "eslint -c .eslintrc.json --ext .ts ./src"
