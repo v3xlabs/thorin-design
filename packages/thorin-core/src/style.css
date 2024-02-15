@@ -1,5 +1,7 @@
 html, body {
     font-family: "Satoshi", sans-serif;
+    background: var(--thorin-background-primary);
+    color: var(--thorin-text-primary);
 }
 
 * {
