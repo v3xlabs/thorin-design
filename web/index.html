@@ -1,33 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thorin Design System</title>
-</head>
-<body>
-    <h1>thorin.design</h1>
-    <p>Welcome to the thorin design system.</p>
-    <thorin-button>hello world</thorin-button>
-    <thorin-button>hello world</thorin-button>
-    <thorin-button>hello world</thorin-button>
-    <thorin-button>hello world</thorin-button>
-    <thorin-modal open>
-        <p>Hello world</p>
-        <thorin-avatar name="luc.eth"></thorin-avatar>
-        <thorin-avatar name="domico.eth"></thorin-avatar>
-        <thorin-avatar name="nick.eth"></thorin-avatar>
-        <p>Hello world</p>
-        <p id="big">This component gets bigger.</p>
-    </thorin-modal>
-    <script src="./index.ts" type="module"></script>
-    <script>
-        let height = 5;
-        document.getElementById('big').addEventListener('click', () => {
-            height += 32;
-            document.getElementById('big').style.height = `${height}px`;
-            document.getElementById('big').style.width = `${Math.random() * 300 + 320}px`;
-        });
-    </script>
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Thorin Design System</title>
+    </head>
+    <body>
+        <h1>thorin.design</h1>
+        <p>Welcome to the thorin design system.</p>
+        <div style="display: flex; flex-direction: column; gap: 4px">
+            <thorin-button>hello world</thorin-button>
+            <thorin-button>hello world</thorin-button>
+            <thorin-button>hello world</thorin-button>
+            <thorin-button onclick="opentestmodal()">Open Modal</thorin-button>
+        </div>
+        <thorin-modal id="testmodal">
+            <div class="space-y-4">
+                <p>Hello world</p>
+                <thorin-avatar name="luc.eth"></thorin-avatar>
+                <thorin-avatar name="domico.eth"></thorin-avatar>
+                <thorin-avatar name="nick.eth"></thorin-avatar>
+                <p>Hello world</p>
+                <div id="big"></div>
+                <thorin-button onclick="randomizebig()" width="full">
+                    Randomize Modal Size
+                </thorin-button>
+            </div>
+        </thorin-modal>
+        <script src="./index.ts" type="module"></script>
+        <script>
+            function opentestmodal() {
+                document.getElementById("testmodal").open = true;
+            }
+
+            let height = 5;
+            function randomizebig() {
+                height += 32;
+                document.getElementById("big").style.height = `${height}px`;
+                document.getElementById("big").style.width = `${
+                    Math.random() * 300 + 320
+                }px`;
+            }
+        </script>
+    </body>
 </html>

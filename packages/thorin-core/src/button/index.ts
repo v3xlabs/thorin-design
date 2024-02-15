@@ -36,6 +36,9 @@ export class ThorinButton extends LitElement {
     @property({ type: String })
     width: 'auto' | 'full' = 'auto';
 
+    @property({ attribute: false })
+    onclick: (_event: PointerEvent) => void = () => {};
+
     render() {
         return html`
             <button @click="${this._onClick}" class="${this.computeClass}">
@@ -49,7 +52,9 @@ export class ThorinButton extends LitElement {
     }
 
     private _onClick(event: PointerEvent) {
-        console.log('Button clicked', event);
+        if (this.onclick) {
+            this.onclick(event);
+        }
     }
 }
 

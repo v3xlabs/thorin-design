@@ -16,6 +16,6 @@
         "browser": true
     },
     "rules": {
-        
+        "unicorn/template-indent": "off"
     }
 }

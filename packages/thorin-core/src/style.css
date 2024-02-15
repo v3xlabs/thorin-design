@@ -203,3 +203,7 @@ p {
         --thorin-border: #42464E;
     }
 }
+
+.space-y-4 > *:not(:first-child) {
+    margin-top: var(--thorin-spacing-4);
+}

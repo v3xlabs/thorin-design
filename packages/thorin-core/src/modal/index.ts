@@ -8,7 +8,7 @@ export class ThorinModal extends LitElement {
 
     static styles = css`
         :host {
-            display: block;
+            display: none;
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.17);
@@ -84,7 +84,6 @@ export class ThorinModal extends LitElement {
                 <div class="modal">
                     <div class="content">
                         <slot></slot>
-                        <thorin-button width="full">Close</thorin-button>
                     </div>
                 </div>
             </div>
