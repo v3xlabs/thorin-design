@@ -113,7 +113,7 @@ export class ThorinConnectModal extends LitElement {
         return html`
             <thorin-modal
                 ?open="${this.open}"
-                title="${this.activeConnector && !this.connecting
+                modalTitle="${this.activeConnector && !this.connecting
                     ? 'Wallet Settings'
                     : 'Connect Wallet'}"
             >

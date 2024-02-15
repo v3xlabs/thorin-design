@@ -7,7 +7,7 @@ export class ThorinModal extends LitElement {
     open = false;
 
     @property({ type: String })
-    title = '';
+    modalTitle = '';
 
     static styles = css`
         :host {
@@ -107,7 +107,7 @@ export class ThorinModal extends LitElement {
             <div class="modal-container">
                 <div class="modal">
                     <div class="content">
-                        <div class="title">${this.title}</div>
+                        <div class="title">${this.modalTitle}</div>
                         <slot></slot>
                     </div>
                 </div>
