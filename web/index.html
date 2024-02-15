@@ -6,24 +6,47 @@
         <title>Thorin Design System</title>
     </head>
     <body>
-        <h1>thorin.design</h1>
-        <p>Welcome to the thorin design system.</p>
-        <div style="display: flex; flex-direction: column; gap: 4px">
-            <thorin-button>default button</thorin-button>
-            <thorin-button variant="secondary">secondary button</thorin-button>
-            <thorin-button variant="error-secondary">error secondary button</thorin-button>
-            <thorin-button variant="subtle">error secondary button</thorin-button>
-            <thorin-button variant="disabled">error secondary button</thorin-button>
-            <thorin-button variant="indigo">indigo button</thorin-button>
-            <thorin-button variant="purple">purple button</thorin-button>
-            <thorin-button variant="pink">pink button</thorin-button>
-            <thorin-button variant="red">red button</thorin-button>
-            <thorin-button variant="orange">orange button</thorin-button>
-            <thorin-button variant="yellow">yellow button</thorin-button>
-            <thorin-button variant="green">green button</thorin-button>
-            <thorin-button variant="grey">grey button</thorin-button>
-            <thorin-button>hello world</thorin-button>
-            <thorin-button onclick="opentestmodal()">Open Modal</thorin-button>
+        <div style="display: flex; flex-direction: column; gap: 4px; max-width: 765px; margin: 0 auto;">
+            <div class="m-width">
+                <div>
+                    <h1>thorin.design</h1>
+                    <p>Welcome to the thorin design system.</p>
+                </div>
+            </div>
+            <div class="card">
+                <thorin-button>default button</thorin-button>
+                <thorin-button variant="secondary"
+                    >secondary button</thorin-button
+                >
+                <thorin-button variant="error-secondary"
+                    >error secondary button</thorin-button
+                >
+                <thorin-button variant="subtle"
+                    >error secondary button</thorin-button
+                >
+                <thorin-button variant="disabled"
+                    >error secondary button</thorin-button
+                >
+                <thorin-button variant="indigo">indigo button</thorin-button>
+                <thorin-button variant="purple">purple button</thorin-button>
+                <thorin-button variant="pink">pink button</thorin-button>
+                <thorin-button variant="red">red button</thorin-button>
+                <thorin-button variant="orange">orange button</thorin-button>
+                <thorin-button variant="yellow">yellow button</thorin-button>
+                <thorin-button variant="green">green button</thorin-button>
+                <thorin-button variant="grey">grey button</thorin-button>
+                <thorin-button>hello world</thorin-button>
+            </div>
+            <div class="card">
+                <thorin-tag>Tag</thorin-tag>
+                <thorin-tag variant="green">Tag</thorin-tag>
+                <thorin-tag variant="red">Tag</thorin-tag>
+                <thorin-tag variant="yellow">Tag</thorin-tag>
+                <thorin-tag variant="grey">Tag</thorin-tag>
+            </div>
+            <div class="card">
+                <thorin-button onclick="opentestmodal()">Open Modal</thorin-button>
+            </div>
         </div>
         <thorin-modal id="testmodal">
             <div class="space-y-4">
@@ -53,5 +76,15 @@
                 }px`;
             }
         </script>
+        <style>
+            .card {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px;
+                padding: var(--thorin-spacing-4);
+                border: 1px solid #e5e7eb;
+                border-radius: var(--thorin-radius-card);
+            }
+        </style>
     </body>
 </html>

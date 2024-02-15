@@ -135,6 +135,7 @@ p {
 
     --thorin-radius-button: 8px;
     --thorin-radius-card: 16px;
+    --thorin-radius-tag: 14px;
 }
 
 @media (prefers-color-scheme: dark) {

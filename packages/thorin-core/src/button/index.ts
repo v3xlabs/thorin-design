@@ -67,13 +67,6 @@ export class ThorinButton extends LitElement {
             --color-hover: var(--thorin-text-accent);
             --outline: var(--thorin-indigo-bright);
         }
-        button.indigo {
-            --bg: var(--thorin-indigo-primary);
-            --bg-hover: var(--thorin-indigo-bright);
-            --color: var(--thorin-text-accent);
-            --color-hover: var(--thorin-text-accent);
-            --outline: var(--thorin-indigo-bright);
-        }
         button.purple {
             --bg: var(--thorin-purple-primary);
             --bg-hover: var(--thorin-purple-bright);
