@@ -6,6 +6,10 @@
     "types": "dist/index.d.ts",
     "type": "module",
     "private": false,
+    "publishConfig": {
+        "access": "public",
+        "registry": "https://registry.npmjs.org/"
+    },
     "scripts": {
         "build": "rollup -c",
         "lint": "eslint -c .eslintrc.json --ext .ts ./src"
