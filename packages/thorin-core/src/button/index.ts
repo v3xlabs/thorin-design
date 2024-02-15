@@ -15,8 +15,8 @@ export class ThorinButton extends LitElement {
             appearance: none;
             border: none;
             outline: none;
-            border-radius: 24px;
-            padding: 8px 16px;
+            border-radius: var(--thorin-radius-button);
+            padding: 10px 20px;
         }
         button.full {
             width: 100%;
@@ -26,6 +26,7 @@ export class ThorinButton extends LitElement {
             background: var(--thorin-blue-bright);
             color: var(--thorin-text-accent);
             cursor: pointer;
+            transform: translateY(-1px);
         }
         button:focus {
             box-shadow: 0 0 0 2px var(--thorin-blue-bright);

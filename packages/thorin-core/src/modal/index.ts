@@ -34,7 +34,7 @@ export class ThorinModal extends LitElement {
             /* overflow: hidden; Smooth resizing */
             background: var(--thorin-background-primary);
             padding: 16px;
-            border-radius: 24px;
+            border-radius: var(--thorin-radius-card);
             max-width: 100vw;
 
             width: auto;
@@ -103,8 +103,7 @@ export class ThorinModal extends LitElement {
                 console.log('Resize observed', height, width);
                 modal?.setAttribute(
                     'style',
-                    `--max-height: ${height + padding * 2}px; --max-width: ${
-                        width + padding * 2
+                    `--max-height: ${height + padding * 2}px; --max-width: ${width + padding * 2
                     }px`
                 );
                 // modalContent?.setAttribute(
