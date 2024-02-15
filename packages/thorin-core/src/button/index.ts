@@ -52,6 +52,7 @@ export class ThorinButton extends LitElement {
             --color: var(--thorin-text-secondary);
             --color-hover: var(--thorin-text-secondary);
             --outline: transparent;
+            cursor: not-allowed;
         }
         button.blue {
             --bg: var(--thorin-blue-primary);
@@ -129,6 +130,7 @@ export class ThorinButton extends LitElement {
             border-radius: var(--thorin-radius-button);
             padding: 14px 16px;
             font-weight: bold;
+            cursor: pointer;
         }
         button.full {
             width: 100%;
@@ -137,11 +139,11 @@ export class ThorinButton extends LitElement {
         button:active {
             background: var(--bg-hover);
             color: var(--color-hover);
-            cursor: pointer;
             transform: translateY(-1px);
         }
         button:focus {
-            box-shadow: 0 0 0 2px var(--outline);
+            box-shadow: 0 0 0 2px var(--thorin-background-primary),
+                0 0 0 5px var(--outline);
         }
     `;
 
@@ -152,11 +154,15 @@ export class ThorinButton extends LitElement {
     width: 'auto' | 'full' = 'auto';
 
     @property({ attribute: false })
-    onclick: (_event: PointerEvent) => void = () => {};
+    onclick: (_event: PointerEvent) => void = () => { };
 
     render() {
         return html`
-            <button @click="${this._onClick}" class="${this.computeClass}">
+            <button
+                @click="${this._onClick}"
+                class="${this.computeClass}"
+                ?disabled="${this.variant == 'disabled'}"
+            >
                 <slot></slot>
             </button>
         `;
