@@ -6,7 +6,16 @@
         <title>Thorin Design System</title>
     </head>
     <body>
-        <div style="display: flex; flex-direction: column; gap: 4px; max-width: 765px; margin: 0 auto;">
+        <div
+            style="
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                max-width: 765px;
+                margin: 0 auto;
+            "
+            class="space-y-4"
+        >
             <div class="m-width">
                 <div>
                     <h1>thorin.design</h1>
@@ -14,43 +23,79 @@
                 </div>
             </div>
             <div class="card">
-                <thorin-button>default button</thorin-button>
-                <thorin-button variant="secondary"
-                    >secondary button</thorin-button
-                >
-                <thorin-button variant="error-secondary"
-                    >error secondary button</thorin-button
-                >
-                <thorin-button variant="subtle"
-                    >error secondary button</thorin-button
-                >
-                <thorin-button variant="disabled"
-                    >error secondary button</thorin-button
-                >
-                <thorin-button variant="indigo">indigo button</thorin-button>
-                <thorin-button variant="purple">purple button</thorin-button>
-                <thorin-button variant="pink">pink button</thorin-button>
-                <thorin-button variant="red">red button</thorin-button>
-                <thorin-button variant="orange">orange button</thorin-button>
-                <thorin-button variant="yellow">yellow button</thorin-button>
-                <thorin-button variant="green">green button</thorin-button>
-                <thorin-button variant="grey">grey button</thorin-button>
-                <thorin-button>hello world</thorin-button>
+                <p>
+                    This page contains a lightweight version of the
+                    <a target="_blank" href="https://thorin.ens.domains"
+                        >thorin design system</a
+                    >
+                    written using
+                    <a target="_blank" href="https://webcomponents.dev"
+                        >web components</a
+                    >
+                    and
+                    <a target="_blank" href="https://lit.dev">lit elements</a>.
+                </p>
             </div>
             <div class="card">
-                <thorin-tag>Tag</thorin-tag>
-                <thorin-tag variant="green">Tag</thorin-tag>
-                <thorin-tag variant="red">Tag</thorin-tag>
-                <thorin-tag variant="yellow">Tag</thorin-tag>
-                <thorin-tag variant="grey">Tag</thorin-tag>
+                <h2>Buttons</h2>
+                <div class="flex">
+                    <thorin-button>default button</thorin-button>
+                    <thorin-button variant="secondary"
+                        >secondary button</thorin-button
+                    >
+                    <thorin-button variant="error-secondary"
+                        >error secondary button</thorin-button
+                    >
+                    <thorin-button variant="subtle"
+                        >error secondary button</thorin-button
+                    >
+                    <thorin-button variant="disabled"
+                        >error secondary button</thorin-button
+                    >
+                    <thorin-button variant="indigo"
+                        >indigo button</thorin-button
+                    >
+                    <thorin-button variant="purple"
+                        >purple button</thorin-button
+                    >
+                    <thorin-button variant="pink">pink button</thorin-button>
+                    <thorin-button variant="red">red button</thorin-button>
+                    <thorin-button variant="orange"
+                        >orange button</thorin-button
+                    >
+                    <thorin-button variant="yellow"
+                        >yellow button</thorin-button
+                    >
+                    <thorin-button variant="green">green button</thorin-button>
+                    <thorin-button variant="grey">grey button</thorin-button>
+                    <thorin-button>hello world</thorin-button>
+                </div>
             </div>
             <div class="card">
-                <thorin-label>Label</thorin-label>
-                <thorin-label variant="active">Label</thorin-label>
-                <thorin-label variant="helper">Label</thorin-label>
+                <h2>Tags</h2>
+                <div class="flex">
+                    <thorin-tag>Tag</thorin-tag>
+                    <thorin-tag variant="green">Tag</thorin-tag>
+                    <thorin-tag variant="red">Tag</thorin-tag>
+                    <thorin-tag variant="yellow">Tag</thorin-tag>
+                    <thorin-tag variant="grey">Tag</thorin-tag>
+                </div>
             </div>
             <div class="card">
-                <thorin-button onclick="opentestmodal()">Open Modal</thorin-button>
+                <h2>Labels</h2>
+                <div class="flex">
+                    <thorin-label>Label</thorin-label>
+                    <thorin-label variant="active">Label</thorin-label>
+                    <thorin-label variant="helper">Label</thorin-label>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Modals</h2>
+                <div class="flex">
+                    <thorin-button onclick="opentestmodal()"
+                        >Open Modal</thorin-button
+                    >
+                </div>
             </div>
         </div>
         <thorin-modal id="testmodal">
@@ -83,12 +128,29 @@
         </script>
         <style>
             .card {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 4px;
                 padding: var(--thorin-spacing-4);
                 border: 1px solid #e5e7eb;
                 border-radius: var(--thorin-radius-card);
+            }
+            h1 {
+                margin-bottom: 0.5rem;
+                margin-top: 1rem;
+                margin-left: 0.25rem;
+            }
+            h2 {
+                font-size: 1.5rem;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+                margin-top: 0;
+                margin-left: 0.25rem;
+            }
+            .flex {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+            a {
+                color: var(--thorin-blue-primary);
             }
         </style>
     </body>
