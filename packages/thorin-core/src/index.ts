@@ -1,3 +1,4 @@
+export { ThorinAvatar } from './avatar';
 export { ThorinButton } from './button';
 export { ThorinModal } from './modal';
 
