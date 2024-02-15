@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable sonarjs/no-identical-functions */
 /* eslint-disable unicorn/no-nested-ternary */
 import { walletConnect } from '@wagmi/connectors';
@@ -110,7 +111,12 @@ export class ThorinConnectModal extends LitElement {
 
     render() {
         return html`
-            <thorin-modal ?open="${this.open}" title="Connect Wallet">
+            <thorin-modal
+                ?open="${this.open}"
+                title="${this.activeConnector && !this.connecting
+                    ? 'Wallet Settings'
+                    : 'Connect Wallet'}"
+            >
                 <div class="space-y-2">
                     ${this.activeConnector && !this.connecting
                         ? html`<div class="space-y-2">
