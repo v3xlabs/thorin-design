@@ -1,5 +1,6 @@
 export { ThorinAvatar } from './avatar';
 export { ThorinButton } from './button';
+export { ThorinConnectModal } from './connect-modal';
 export { ThorinLabel } from './label';
 export { ThorinModal } from './modal';
 export { ThorinTag } from './tag';

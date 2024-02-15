@@ -94,6 +94,9 @@
                     <thorin-button onclick="opentestmodal()"
                         >Open Modal</thorin-button
                     >
+                    <thorin-button onclick="openconnectmodal()"
+                        >Open Connect Modal</thorin-button
+                    >
                 </div>
             </div>
         </div>
@@ -110,10 +113,15 @@
                 </thorin-button>
             </div>
         </thorin-modal>
+        <thorin-connect-modal id="connectmodal">
+        </thorin-connect-modal>
         <script src="./index.ts" type="module"></script>
         <script>
             function opentestmodal() {
                 document.getElementById("testmodal").open = true;
+            }
+            function openconnectmodal() {
+                document.getElementById("connectmodal").open = true;
             }
 
             let height = 5;
