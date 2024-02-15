@@ -2,6 +2,14 @@ html, body {
     font-family: "Satoshi", sans-serif;
 }
 
+* {
+    box-sizing: border-box;
+}
+
+p {
+    margin: 0;
+}
+
 @font-face {
     font-family: "Satoshi";
     src: url("https://app.ens.domains/fonts/sans-serif/Satoshi-Bold.otf")

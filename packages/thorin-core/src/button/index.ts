@@ -1,5 +1,6 @@
+/* eslint-disable unicorn/template-indent */
 import { css, html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 
 @customElement('thorin-button')
 export class ThorinButton extends LitElement {
@@ -17,6 +18,9 @@ export class ThorinButton extends LitElement {
             border-radius: 24px;
             padding: 8px 16px;
         }
+        button.full {
+            width: 100%;
+        }
         button:hover,
         button:active {
             background: var(--thorin-blue-bright);
@@ -28,12 +32,19 @@ export class ThorinButton extends LitElement {
         }
     `;
 
+    @property({ type: String })
+    width: 'auto' | 'full' = 'auto';
+
     render() {
         return html`
-            <button @click="${this._onClick}">
+            <button @click="${this._onClick}" class="${this.computeClass}">
                 <slot></slot>
             </button>
         `;
+    }
+
+    private get computeClass() {
+        return this.width === 'full' ? 'full' : '';
     }
 
     private _onClick(event: PointerEvent) {

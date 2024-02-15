@@ -23,18 +23,53 @@ export class ThorinModal extends LitElement {
             display: flex; /* Show modal when open */
         }
         .modal {
-            transition: all 20ms ease-in-out;
-            overflow: hidden; /* Smooth resizing */
+            transition: all 250ms ease-out;
+            /* overflow: hidden; Smooth resizing */
             background: var(--thorin-background-primary);
             padding: 16px;
             border-radius: 24px;
             max-width: 100vw;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 100%;
+            width: auto;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        @media (max-width: 768px) {
+            .modal {
+                top: auto;
+                bottom: 0;
+                transform: translate(-50%, 0%);
+                height: auto;
+                max-height: 100vh;
+                overflow-y: auto;
+            }
         }
         .content {
-            overflow: unset;
-            max-width: 100vw;
+            max-height: 100vh;
+            overflow: visible;
+            width: fit-content;
+            height: fit-content;
         }
     `;
+
+    render() {
+        return html`
+            <div class="modal">
+                <div class="content">
+                    <slot></slot>
+                    <thorin-button width="full">Close</thorin-button>
+                </div>
+            </div>
+        `;
+    }
 
     firstUpdated() {
         const modal = this.shadowRoot?.querySelector('.modal');
@@ -42,36 +77,22 @@ export class ThorinModal extends LitElement {
         const resizeObserver = new ResizeObserver((entries) => {
             for (const entry of entries) {
                 const { height, width } = entry.contentRect;
-                // Apply the new height and width to the modal, if necessary
-                // This is where you'd dynamically adjust based on content, similar to Framer Motion
-                // For example, adjust max-height/max-width or transform scale
 
                 console.log('Resize observed', height, width);
                 modal?.setAttribute(
                     'style',
                     `max-height: ${height + 32}px; max-width: ${width + 32}px`
                 );
-                modalContent?.setAttribute(
-                    'style',
-                    `max-height: ${height}px; max-width: ${width}px`
-                );
+                // modalContent?.setAttribute(
+                //     'style',
+                //     `max-height: ${height}px; max-width: ${width}px`
+                // );
             }
         });
 
         if (modalContent) {
             resizeObserver.observe(modalContent);
         }
-    }
-
-    render() {
-        return html`
-            <div class="modal">
-                <div class="content">
-                    <slot></slot>
-                    <thorin-button>Close</thorin-button>
-                </div>
-            </div>
-        `;
     }
 }
 
