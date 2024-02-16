@@ -1,4 +1,4 @@
-html, body {
+body {
     font-family: "Satoshi", sans-serif;
     background: var(--thorin-background-primary);
     color: var(--thorin-text-primary);
@@ -36,7 +36,7 @@ p {
     font-style: normal;
 }
 
-:root {
+html {
     --thorin-blue-primary: #3889FF;
     --thorin-blue-active: #003685;
     --thorin-blue-dim: #056AFF;
@@ -111,7 +111,7 @@ p {
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
+    html {
         --thorin-blue-primary: #3889FF;
         --thorin-blue-active: #EEF5FF;
         --thorin-blue-dim: #D1E4FF;
@@ -175,6 +175,71 @@ p {
         --thorin-background-disabled: #424347;
         --thorin-border: #42464E;
     }
+}
+
+html.dark {
+    --thorin-blue-primary: #3889FF;
+    --thorin-blue-active: #EEF5FF;
+    --thorin-blue-dim: #D1E4FF;
+    --thorin-blue-bright: #056AFF;
+    --thorin-blue-light: #0C4597;
+    --thorin-blue-surface: #20395F;
+    --thorin-indigo-primary: #6B67E9;
+    --thorin-indigo-active: #E3E2F8;
+    --thorin-indigo-dim: #C7C5F1;
+    --thorin-indigo-bright: #342FC5;
+    --thorin-indigo-light: #221E90;
+    --thorin-indigo-surface: #23216D;
+    --thorin-purple-primary: #A343D3;
+    --thorin-purple-active: #EBD6F5;
+    --thorin-purple-dim: #E3C6F1;
+    --thorin-purple-bright: #8A2BBA;
+    --thorin-purple-light: #5E1683;
+    --thorin-purple-surface: #42145A;
+    --thorin-pink-primary: #D52E7E;
+    --thorin-pink-active: #FAE8F1;
+    --thorin-pink-dim: #F4CDE0;
+    --thorin-pink-bright: #AE2366;
+    --thorin-pink-light: #761544;
+    --thorin-pink-surface: #5B1135;
+    --thorin-red-primary: #C6301B;
+    --thorin-red-active: #F9E7E7;
+    --thorin-red-dim: #F0C2C2;
+    --thorin-red-bright: #A72614;
+    --thorin-red-light: #7F1313;
+    --thorin-red-surface: #3F2424;
+    --thorin-orange-primary: #F3930B;
+    --thorin-orange-active: #FDF0DD;
+    --thorin-orange-dim: #FBE1BC;
+    --thorin-orange-bright: #C37609;
+    --thorin-orange-light: #6D4308;
+    --thorin-orange-surface: #583503;
+    --thorin-yellow-primary: #E9B911;
+    --thorin-yellow-active: #FFF5CD;
+    --thorin-yellow-dim: #FFEFAD;
+    --thorin-yellow-bright: #B9930E;
+    --thorin-yellow-light: #5C4B0C;
+    --thorin-yellow-surface: #373222;
+    --thorin-green-primary: #199C75;
+    --thorin-green-active: #E7F4EF;
+    --thorin-green-dim: #CBE7DC;
+    --thorin-green-bright: #158463;
+    --thorin-green-light: #104A38;
+    --thorin-green-surface: #153C31;
+    --thorin-grey-primary: #9B9BA7;
+    --thorin-grey-active: #F6F6F6;
+    --thorin-grey-dim: #E8E8E8;
+    --thorin-grey-bright: #5D5C62;
+    --thorin-grey-light: #424347;
+    --thorin-grey-surface: #141416;
+    --thorin-text-primary: #FFFFFF;
+    --thorin-text-secondary: #9B9BA7;
+    --thorin-text-accent: #FFFFFF;
+    --thorin-text-disabled: #5D5C62;
+    --thorin-background-primary: #1E2122;
+    --thorin-background-secondary: #141416;
+    --thorin-background-disabled: #424347;
+    --thorin-border: #42464E;
 }
 
 .space-y-4 > *:not(:first-child) {
