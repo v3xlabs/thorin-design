@@ -5,28 +5,31 @@ import { walletConnect } from '@wagmi/connectors';
 import {
     type Config,
     type Connector,
-    createConfig,
+    connect,
+    disconnect,
+    getConnections,
     getConnectors,
-    http,
 } from '@wagmi/core';
-import { mainnet } from '@wagmi/core/chains';
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
-const wagmiConfig = createConfig({
-    chains: [mainnet],
-    transports: {
-        [mainnet.id]: http(),
-    },
-});
+let wagmiConfig = {} as Config;
+
+export const setupConfig = (config: Config) => {
+    wagmiConfig = config;
+};
+
+// const wagmiConfig = createConfig({
+//     chains: [mainnet],
+//     transports: {
+//         [mainnet.id]: http(),
+//     },
+// });
 
 @customElement('thorin-connect-modal')
 export class ThorinConnectModal extends LitElement {
     @property({ type: Boolean, reflect: true })
     open = false;
-
-    @property({})
-    wagmiConfig: Config = wagmiConfig;
 
     static override styles = css`
         .button-list {
@@ -126,20 +129,33 @@ export class ThorinConnectModal extends LitElement {
                     console.log(topic, data);
                 }
             },
-        };
-        const x = wc({ chains: [mainnet], emitter } as any) as any;
+        } as any;
+        const x = wc({ chains: wagmiConfig.chains, emitter }) as any;
 
-        this.connectors = [...getConnectors(this.wagmiConfig), x];
+        this.connectors = [...getConnectors(wagmiConfig), x];
     }
 
     override render() {
-        if (!this.myAddress && this.activeConnector) {
+        if (!this.connecting) {
+            this.activeConnector = getConnections(wagmiConfig)[0]?.connector;
+        }
+
+        if (!this.myAddress && this.activeConnector && !this.connecting) {
             console.log('computing account');
             this.activeConnector.getAccounts().then((accounts) => {
-                console.log('computing success');
-                // eslint-disable-next-line prefer-destructuring
+                console.log({ accounts });
                 this.myAddress = accounts[0];
             });
+            // const x = getAccount(this.wagmiConfig);
+
+            // if (x.address) {
+            //     this.myAddress = x.address;
+            // }
+            // .then((accounts) => {
+            //     console.log('computing success');
+            //     // eslint-disable-next-line prefer-destructuring
+            //     this.myAddress = accounts[0];
+            // });
         }
 
         return html`
@@ -148,8 +164,8 @@ export class ThorinConnectModal extends LitElement {
                 modalTitle="${this.activeConnector && !this.connecting
                     ? 'Wallet Settings'
                     : 'Connect Wallet'}"
-                .onClose="${() => {
-                    this.open = false;
+                @onClose="${() => {
+                    this.close();
                 }}"
             >
                 <div class="space-y-2">
@@ -253,25 +269,39 @@ export class ThorinConnectModal extends LitElement {
         `;
     }
 
+    close() {
+        this.dispatchEvent(new CustomEvent('onClose'));
+    }
+
     _connect(connector: Connector) {
         this.connecting = true;
         this.activeConnector = connector;
         console.log(connector);
-        connector
-            .connect()
+
+        connect(wagmiConfig, { connector })
             .catch((error) => {
                 console.log('failed to connect', error);
-                this.disconnect();
+                this.connecting = false;
+                // this.disconnect();
             })
             .finally(() => {
                 this.connecting = false;
                 // this.disconnect();
                 // this.open = false;
+                this.activeConnector?.getAccounts()?.then((accounts) => {
+                    console.log({ accounts });
+                    this.myAddress = accounts[0];
+                });
             });
     }
 
     disconnect() {
-        this.activeConnector?.disconnect();
+        disconnect(wagmiConfig).finally(() => {
+            console.log('disconnected wagmi');
+        });
+        this.activeConnector?.disconnect().finally(() => {
+            console.log('disconnected activeConnector');
+        });
         this.activeConnector = undefined;
         this.connecting = false;
         this.showQR = undefined;

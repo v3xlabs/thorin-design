@@ -119,9 +119,17 @@
         <script>
             function opentestmodal() {
                 document.getElementById("testmodal").open = true;
+                document.getElementById("testmodal").addEventListener("onClose", () => {
+                    console.log("modal closed");
+                    document.getElementById("testmodal").open = false;
+                });
             }
             function openconnectmodal() {
                 document.getElementById("connectmodal").open = true;
+                document.getElementById("connectmodal").addEventListener("onClose", () => {
+                    console.log("connectmodal closed");
+                    document.getElementById("connectmodal").open = false;
+                });
             }
 
             let height = 5;

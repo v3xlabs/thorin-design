@@ -12,9 +12,6 @@ export class ThorinModal extends LitElement {
     @property({ type: Boolean })
     closeOnRequest = true;
 
-    @property()
-    onClose?: () => void;
-
     static override styles = css`
         :host {
             display: none;
@@ -164,8 +161,7 @@ export class ThorinModal extends LitElement {
     }
 
     close() {
-        this.onClose?.();
-        this.open = false;
+        this.dispatchEvent(new CustomEvent('onClose'));
     }
 
     override firstUpdated() {
