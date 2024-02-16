@@ -23,22 +23,22 @@ type ButtonColorVariant =
 
 @customElement('thorin-button')
 export class ThorinButton extends LitElement {
-    static styles = css`
-        button.secondary {
+    static override styles = css`
+        .button.secondary {
             --bg: var(--thorin-blue-surface);
             --bg-hover: var(--thorin-blue-light);
             --color: var(--thorin-blue-dim);
             --color-hover: var(--thorin-blue-dim);
             --outline: var(--thorin-blue-light);
         }
-        button.error-secondary {
+        .button.error-secondary {
             --bg: var(--thorin-red-surface);
             --bg-hover: var(--thorin-red-light);
             --color: var(--thorin-red-dim);
             --color-hover: var(--thorin-red-dim);
             --outline: var(--thorin-red-light);
         }
-        button.subtle {
+        .button.subtle {
             --bg: var(--thorin-background-primary);
             --bg-hover: var(--thorin-background-secondary);
             --color: var(--thorin-text-secondary);
@@ -46,7 +46,7 @@ export class ThorinButton extends LitElement {
             --outline: var(--thorin-border);
             --border: 1px solid var(--thorin-border);
         }
-        button.disabled {
+        .button.disabled {
             --bg: var(--thorin-background-disabled);
             --bg-hover: var(--thorin-background-disabled);
             --color: var(--thorin-text-secondary);
@@ -54,70 +54,71 @@ export class ThorinButton extends LitElement {
             --outline: transparent;
             cursor: not-allowed;
         }
-        button.blue {
+        .button.blue {
             --bg: var(--thorin-blue-primary);
             --bg-hover: var(--thorin-blue-bright);
             --color: var(--thorin-text-accent);
             --color-hover: var(--thorin-text-accent);
             --outline: var(--thorin-blue-bright);
         }
-        button.indigo {
+        .button.indigo {
             --bg: var(--thorin-indigo-primary);
             --bg-hover: var(--thorin-indigo-bright);
             --color: var(--thorin-text-accent);
             --color-hover: var(--thorin-text-accent);
             --outline: var(--thorin-indigo-bright);
         }
-        button.purple {
+        .button.purple {
             --bg: var(--thorin-purple-primary);
             --bg-hover: var(--thorin-purple-bright);
             --color: var(--thorin-text-accent);
             --color-hover: var(--thorin-text-accent);
             --outline: var(--thorin-purple-bright);
         }
-        button.pink {
+        .button.pink {
             --bg: var(--thorin-pink-primary);
             --bg-hover: var(--thorin-pink-bright);
             --color: var(--thorin-text-accent);
             --color-hover: var(--thorin-text-accent);
             --outline: var(--thorin-pink-bright);
         }
-        button.red {
+        .button.red {
             --bg: var(--thorin-red-primary);
             --bg-hover: var(--thorin-red-bright);
             --color: var(--thorin-text-accent);
             --color-hover: var(--thorin-text-accent);
             --outline: var(--thorin-red-bright);
         }
-        button.orange {
+        .button.orange {
             --bg: var(--thorin-orange-primary);
             --bg-hover: var(--thorin-orange-bright);
             --color: var(--thorin-text-accent);
             --color-hover: var(--thorin-text-accent);
             --outline: var(--thorin-orange-bright);
         }
-        button.yellow {
+        .button.yellow {
             --bg: var(--thorin-yellow-primary);
             --bg-hover: var(--thorin-yellow-bright);
             --color: var(--thorin-text-accent);
             --color-hover: var(--thorin-text-accent);
             --outline: var(--thorin-yellow-bright);
         }
-        button.green {
+        .button.green {
             --bg: var(--thorin-green-primary);
             --bg-hover: var(--thorin-green-bright);
             --color: var(--thorin-text-accent);
             --color-hover: var(--thorin-text-accent);
             --outline: var(--thorin-green-bright);
         }
-        button.grey {
+        .button.grey {
             --bg: var(--thorin-grey-primary);
             --bg-hover: var(--thorin-grey-bright);
             --color: var(--thorin-text-accent);
             --color-hover: var(--thorin-text-accent);
             --outline: var(--thorin-grey-bright);
         }
-        button {
+        .button {
+            --border: 1px solid var(--bg);
             background: var(--bg);
             color: var(--color);
             display: flex;
@@ -131,17 +132,20 @@ export class ThorinButton extends LitElement {
             padding: 14px 16px;
             font-weight: bold;
             cursor: pointer;
+            margin: 0;
+            line-height: normal;
+            text-decoration: none;
         }
-        button.full {
+        .button.full {
             width: 100%;
         }
-        button:hover,
-        button:active {
+        .button:hover,
+        .button:active {
             background: var(--bg-hover);
             color: var(--color-hover);
             transform: translateY(-1px);
         }
-        button:focus {
+        .button:focus {
             box-shadow: 0 0 0 2px var(--thorin-background-primary),
                 0 0 0 5px var(--outline);
         }
@@ -156,21 +160,44 @@ export class ThorinButton extends LitElement {
     @property({ attribute: false })
     onClick: (_event: PointerEvent) => void = () => {};
 
-    render() {
-        return html`
-            <button
-                @click="${this._onClick}"
-                class="${this.computeClass()}"
-                ?disabled="${this.variant == 'disabled'}"
-            >
-                <slot></slot>
-            </button>
-        `;
+    @property({ type: String })
+    href: string | undefined;
+
+    @property({ type: String })
+    target: string | undefined;
+
+    override render() {
+        const content = html`<slot></slot>`;
+
+        return this.href
+            ? html`
+                  <a
+                      href="${this.href}"
+                      target="${this.target || '_self'}"
+                      class="${this.computeClass()}"
+                      ?disabled="${this.variant == 'disabled'}"
+                  >
+                      ${content}
+                  </a>
+              `
+            : html`
+                  <button
+                      class="${this.computeClass()}"
+                      @click="${this._onClick}"
+                      ?disabled="${this.variant == 'disabled'}"
+                  >
+                      ${content}
+                  </button>
+              `;
     }
 
     private computeClass() {
         return (
-            [this.width === 'full' ? 'full' : '', this.computeVariant()]
+            [
+                'button',
+                this.width === 'full' ? 'full' : '',
+                this.computeVariant(),
+            ]
                 .join(' ')
                 .trim() || ''
         );
@@ -198,5 +225,17 @@ export class ThorinButton extends LitElement {
 declare global {
     interface HTMLElementTagNameMap {
         'thorin-button': ThorinButton;
+    }
+}
+
+// eslint-disable-next-line unused-imports/no-unused-vars
+declare namespace JSX {
+    // eslint-disable-next-line unused-imports/no-unused-vars
+    interface IntrinsicElements {
+        'thorin-button': {
+            variant?: ButtonVariant;
+            onClick?: (_event: PointerEvent) => void;
+            // Add any other properties or attributes here
+        };
     }
 }

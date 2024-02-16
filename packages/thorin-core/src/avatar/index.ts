@@ -5,7 +5,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 
 @customElement('thorin-avatar')
 export class ThorinAvatar extends LitElement {
-    static styles = css`
+    static override styles = css`
         :host {
             display: inline-flex;
             width: 48px;
@@ -69,7 +69,7 @@ export class ThorinAvatar extends LitElement {
     @state()
     private imgError: boolean = false;
 
-    render() {
+    override render() {
         const avatarUrl = `https://enstate.rs/i/${this.name}`;
 
         return html`

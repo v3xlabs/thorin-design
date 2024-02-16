@@ -12,7 +12,7 @@ export class ThorinModal extends LitElement {
     @property({ type: Boolean })
     closeOnRequest = true;
 
-    static styles = css`
+    static override styles = css`
         :host {
             display: none;
             position: fixed;
@@ -120,10 +120,10 @@ export class ThorinModal extends LitElement {
         }
     `;
 
-    render() {
+    override render() {
         return html`
             <dialog open="${this.open}" class="modal-container" @close="${() =>
-            console.log('onClose')}" @click="${(event) => {
+            console.log('onClose')}" @click="${(event: any) => {
             console.log('click', event);
         }}">
                     <div class="modal">
@@ -137,7 +137,7 @@ export class ThorinModal extends LitElement {
         `;
     }
 
-    firstUpdated() {
+    override firstUpdated() {
         const modal = this.shadowRoot?.querySelector('.modal');
         const modalContent = this.shadowRoot?.querySelector('.content');
         const resizeObserver = new ResizeObserver((entries) => {

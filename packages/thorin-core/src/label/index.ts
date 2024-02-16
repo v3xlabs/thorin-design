@@ -6,7 +6,7 @@ type LabelVariant = 'default' | 'active' | 'helper';
 
 @customElement('thorin-label')
 export class ThorinLabel extends LitElement {
-    static styles = css`
+    static override styles = css`
         .label.default {
             --color: var(--thorin-text-secondary);
             --border: 1px solid var(--thorin-border);
@@ -40,7 +40,7 @@ export class ThorinLabel extends LitElement {
     @property({ type: String })
     variant: LabelVariant = 'default';
 
-    render() {
+    override render() {
         return html`
             <span class="${this.computeClass}">
                 <slot></slot>
@@ -49,7 +49,7 @@ export class ThorinLabel extends LitElement {
     }
 
     private get computeClass() {
-        return ['label', this.variant].join(' ').trim() || undefined;
+        return ['label', this.variant].join(' ').trim() || '';
     }
 }
 

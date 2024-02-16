@@ -1,16 +1,12 @@
 {
-    "name": "@ens-tools/thorin-core",
+    "name": "@ens-tools/thorin-react",
     "version": "0.0.2",
     "type": "module",
     "main": "./dist/esm/index.js",
     "types": "./dist/types/index.d.ts",
-    "exports": {
-        ".": "./dist/esm/index.js",
-        "./style.css": "./dist/style.css"
-    },
     "files": [
-        "dist",
-        "!tsconfig.tsbuildinfo"
+      "dist",
+      "!tsconfig.tsbuildinfo"
     ],
     "private": false,
     "publishConfig": {
@@ -18,21 +14,25 @@
         "registry": "https://registry.npmjs.org/"
     },
     "scripts": {
-        "build": "tsc --build && cp ./src/style.css ./dist/style.css",
+        "build": "tsc --build",
         "lint": "eslint -c .eslintrc.json --ext .ts ./src"
     },
     "keywords": [],
     "author": "V3X Labs BV.",
     "license": "LGPL-3.0-only",
     "dependencies": {
+        "@ens-tools/thorin-core": "workspace:*",
+        "@lit/react": "^1.0.3",
         "@rollup/plugin-commonjs": "^25.0.7",
         "@rollup/plugin-json": "^6.1.0",
         "lit": "^3.1.2",
+        "react": "^18.2.0",
         "rollup-plugin-peer-deps-external": "^2.2.4"
     },
     "devDependencies": {
         "@rollup/plugin-node-resolve": "^15.2.3",
         "@rollup/plugin-typescript": "^11.1.6",
+        "@types/react": "^18.2.55",
         "@typescript-eslint/parser": "^7.0.1",
         "eslint": "^8.56.0",
         "eslint-plugin-v3xlabs": "^1.6.2",

@@ -15,7 +15,7 @@ type TagColorVariant =
 
 @customElement('thorin-tag')
 export class ThorinTag extends LitElement {
-    static styles = css`
+    static override styles = css`
         .tag.blue {
             --bg: var(--thorin-blue-surface);
             --color: var(--thorin-blue-primary);
@@ -55,21 +55,31 @@ export class ThorinTag extends LitElement {
     @property({ type: String })
     variant: TagColorVariant = 'blue';
 
-    render() {
+    override render() {
         return html`
-            <span class="${this.computeClass}">
+            <span class="${this.computeClass()}">
                 <slot></slot>
             </span>
         `;
     }
 
-    private get computeClass() {
-        return ['tag', this.variant].join(' ').trim() || undefined;
+    private computeClass() {
+        return ['tag', this.variant].join(' ').trim() || '';
     }
 }
 
 declare global {
     interface HTMLElementTagNameMap {
         'thorin-tag': ThorinTag;
+    }
+}
+
+// eslint-disable-next-line unused-imports/no-unused-vars
+declare namespace JSX {
+    // eslint-disable-next-line unused-imports/no-unused-vars
+    interface IntrinsicElements {
+        'thorin-tag': {
+            variant?: TagColorVariant;
+        };
     }
 }

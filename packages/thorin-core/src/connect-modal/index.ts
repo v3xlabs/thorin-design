@@ -2,7 +2,7 @@
 /* eslint-disable sonarjs/no-identical-functions */
 /* eslint-disable unicorn/no-nested-ternary */
 import { walletConnect } from '@wagmi/connectors';
-import { Connector, createConfig, getConnectors, http } from '@wagmi/core';
+import { type Connector, createConfig, getConnectors, http } from '@wagmi/core';
 import { mainnet } from '@wagmi/core/chains';
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
@@ -19,7 +19,7 @@ export class ThorinConnectModal extends LitElement {
     @property({ type: Boolean, reflect: true })
     open = false;
 
-    static styles = css`
+    static override styles = css`
         .button-list {
             display: flex;
             flex-direction: column;
@@ -76,7 +76,7 @@ export class ThorinConnectModal extends LitElement {
     @state()
     showQR: string | undefined = undefined;
 
-    firstUpdated() {
+    override firstUpdated() {
         const wc = walletConnect({
             projectId: 'b451d5ff25d61b3fde7b30f167a5a957',
             metadata: {
@@ -109,7 +109,7 @@ export class ThorinConnectModal extends LitElement {
         this.connectors = [...getConnectors(wagmiConfig), x];
     }
 
-    render() {
+    override render() {
         return html`
             <thorin-modal
                 ?open="${this.open}"

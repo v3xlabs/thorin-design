@@ -1,0 +1,22 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 2021
+    },
+    "extends": [
+        "plugin:v3xlabs/recommended"
+    ],
+    "ignorePatterns": [
+        "!**/*"
+    ],
+    "plugins": [
+        "v3xlabs"
+    ],
+    "env": {
+        "browser": true
+    },
+    "rules": {
+        "unicorn/template-indent": "off",
+        "sonarjs/no-nested-template-literals": "off"
+    }
+}
