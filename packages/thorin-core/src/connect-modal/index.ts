@@ -2,7 +2,13 @@
 /* eslint-disable sonarjs/no-identical-functions */
 /* eslint-disable unicorn/no-nested-ternary */
 import { walletConnect } from '@wagmi/connectors';
-import { type Connector, createConfig, getConnectors, http } from '@wagmi/core';
+import {
+    type Config,
+    type Connector,
+    createConfig,
+    getConnectors,
+    http,
+} from '@wagmi/core';
 import { mainnet } from '@wagmi/core/chains';
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
@@ -18,6 +24,9 @@ const wagmiConfig = createConfig({
 export class ThorinConnectModal extends LitElement {
     @property({ type: Boolean, reflect: true })
     open = false;
+
+    @property({})
+    wagmiConfig: Config = wagmiConfig;
 
     static override styles = css`
         .button-list {
@@ -62,6 +71,17 @@ export class ThorinConnectModal extends LitElement {
         .space-y-2 > *:last-child {
             margin-top: var(--thorin-spacing-2);
         }
+        .connector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        .connector-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+        }
     `;
 
     @state()
@@ -69,6 +89,9 @@ export class ThorinConnectModal extends LitElement {
 
     @state()
     activeConnector: Connector | undefined = undefined;
+
+    @state()
+    myAddress: string | undefined = undefined;
 
     @state()
     connectors: Connector[] = [];
@@ -106,30 +129,42 @@ export class ThorinConnectModal extends LitElement {
         };
         const x = wc({ chains: [mainnet], emitter } as any) as any;
 
-        this.connectors = [...getConnectors(wagmiConfig), x];
+        this.connectors = [...getConnectors(this.wagmiConfig), x];
     }
 
     override render() {
+        if (!this.myAddress && this.activeConnector) {
+            console.log('computing account');
+            this.activeConnector.getAccounts().then((accounts) => {
+                console.log('computing success');
+                // eslint-disable-next-line prefer-destructuring
+                this.myAddress = accounts[0];
+            });
+        }
+
         return html`
             <thorin-modal
                 ?open="${this.open}"
                 modalTitle="${this.activeConnector && !this.connecting
                     ? 'Wallet Settings'
                     : 'Connect Wallet'}"
+                .onClose="${() => {
+                    this.open = false;
+                }}"
             >
                 <div class="space-y-2">
                     ${this.activeConnector && !this.connecting
                         ? html`<div class="space-y-2">
-                              <div class="connected">Connected</div>
+                              <div class="connected">
+                                  Connected as ${this.myAddress}
+                              </div>
                               <div>
                                   <thorin-button
                                       variant="subtle"
                                       width="full"
                                       .onClick="${() => {
-                                          this.activeConnector?.disconnect();
-                                          this.activeConnector = undefined;
-                                          this.connecting = false;
-                                          this.showQR = undefined;
+                                          console.log('FF');
+                                          this.disconnect();
                                       }}"
                                       >Disconnect</thorin-button
                                   >
@@ -179,10 +214,8 @@ export class ThorinConnectModal extends LitElement {
                                       variant="subtle"
                                       width="full"
                                       .onClick="${() => {
-                                          this.activeConnector?.disconnect();
-                                          this.activeConnector = undefined;
-                                          this.connecting = false;
-                                          this.showQR = undefined;
+                                          console.log('FF2');
+                                          this.disconnect();
                                       }}"
                                       >Back</thorin-button
                                   >
@@ -195,11 +228,22 @@ export class ThorinConnectModal extends LitElement {
                                   (connector) =>
                                       html`
                                           <thorin-button
+                                              variant="subtle"
                                               width="full"
                                               .onClick=${() =>
                                                   this._connect(connector)}
-                                              >${connector.name}</thorin-button
                                           >
+                                              <div class="connector">
+                                                  ${connector.icon
+                                                      ? html`<img
+                                                            src="${connector.icon}"
+                                                            alt="${connector.name}"
+                                                            class="connector-icon"
+                                                        />`
+                                                      : ''}
+                                                  <span>${connector.name}</span>
+                                              </div>
+                                          </thorin-button>
                                       `
                               )}
                           </div>`
@@ -217,12 +261,21 @@ export class ThorinConnectModal extends LitElement {
             .connect()
             .catch((error) => {
                 console.log('failed to connect', error);
-                this.activeConnector = undefined;
+                this.disconnect();
             })
             .finally(() => {
                 this.connecting = false;
+                // this.disconnect();
                 // this.open = false;
             });
+    }
+
+    disconnect() {
+        this.activeConnector?.disconnect();
+        this.activeConnector = undefined;
+        this.connecting = false;
+        this.showQR = undefined;
+        this.myAddress = undefined;
     }
 }
 

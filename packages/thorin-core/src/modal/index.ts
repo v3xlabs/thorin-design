@@ -12,6 +12,9 @@ export class ThorinModal extends LitElement {
     @property({ type: Boolean })
     closeOnRequest = true;
 
+    @property()
+    onClose?: () => void;
+
     static override styles = css`
         :host {
             display: none;
@@ -43,8 +46,7 @@ export class ThorinModal extends LitElement {
             background: transparent;
         }
         .modal {
-            transition: all 250ms ease-out;
-            /* overflow: hidden; Smooth resizing */
+            transition: all 250ms cubic-bezier(0.075, 0.82, 0.165, 1);
             background: var(--thorin-background-primary);
             border-radius: var(--thorin-radius-card);
             max-width: 100vw;
@@ -86,6 +88,18 @@ export class ThorinModal extends LitElement {
                 green
             );
             opacity: 0.75;
+        }
+        .close {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: var(--thorin-spacing-2) var(--thorin-spacing-4);
+            margin-x: var(--thorin-spacing-2);
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--thorin-text-secondary);
         }
         /* Modal Breakpoint */
         @media (max-width: 576px) {
@@ -129,12 +143,29 @@ export class ThorinModal extends LitElement {
                     <div class="modal">
                         <div class="content">
                             <div class="title">${this.modalTitle}</div>
+                            ${
+                                this.closeOnRequest
+                                    ? html`<button
+                                          @click="${() => {
+                                              this.close();
+                                          }}"
+                                          class="close"
+                                      >
+                                          x
+                                      </button>`
+                                    : ''
+                            }
                             <slot></slot>
                         </div>
                     </div>
                 </div>
             </dialog>
         `;
+    }
+
+    close() {
+        this.onClose?.();
+        this.open = false;
     }
 
     override firstUpdated() {
