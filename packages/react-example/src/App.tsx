@@ -1,9 +1,10 @@
-import { ThorinButton, ThorinAvatar, ThorinLabel, ThorinTag, ThorinModal } from '@ens-tools/thorin-react'
+import { ThorinButton, ThorinAvatar, ThorinLabel, ThorinTag, ThorinModal, ThorinConnectModal } from '@ens-tools/thorin-react'
 import '@ens-tools/thorin-core/style.css';
 import { useState } from 'react';
 
 function App() {
   const [testModal, setTestModal] = useState(false)
+  const [connectModal, setConnectModal] = useState(false)
 
   return (
     <>
@@ -43,10 +44,20 @@ function App() {
         <ThorinTag variant="grey">Grey</ThorinTag>
       </div>
       <h2>Modal</h2>
-      <ThorinButton onClick={() => setTestModal(true)}>Open Modal</ThorinButton>
+      <div style={{
+        display: "flex",
+        flexDirection: "row",
+        gap: "10px"
+      }}>
+        <ThorinButton onClick={() => setTestModal(true)}>Open Modal</ThorinButton>
+        <ThorinButton onClick={() => setConnectModal(true)}>Open Connect Modal</ThorinButton>
+      </div>
       <ThorinModal open={testModal} modalTitle="Modal Title" onClose={() => setTestModal(false)} closeOnRequest={true}>
         <p>Modal Content</p>
-      </ThorinModal> 
+      </ThorinModal>
+      <ThorinConnectModal open={connectModal} onClose={() => {
+        setConnectModal(false)
+      }} />
     </>
   )
 }
