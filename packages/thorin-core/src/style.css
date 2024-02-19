@@ -111,7 +111,7 @@ html {
 }
 
 @media (prefers-color-scheme: dark) {
-    html {
+    html:not(.no-system) {
         --thorin-blue-primary: #3889FF;
         --thorin-blue-active: #EEF5FF;
         --thorin-blue-dim: #D1E4FF;
