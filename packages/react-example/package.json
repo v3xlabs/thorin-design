@@ -10,10 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ens-tools/thorin-core": "workspace:*",
+    "@ens-tools/thorin-react": "workspace:0.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "@ens-tools/thorin-react": "workspace:0.0.3",
-    "@ens-tools/thorin-core": "workspace:0.0.3-1"
+    "wagmi": "^2.5.7"
   },
   "devDependencies": {
     "@types/react": "^18.2.55",

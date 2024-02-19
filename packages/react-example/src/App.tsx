@@ -1,13 +1,22 @@
 import { ThorinButton, ThorinAvatar, ThorinLabel, ThorinTag, ThorinModal, ThorinConnectModal } from '@ens-tools/thorin-react'
 import '@ens-tools/thorin-core/style.css';
 import { useState } from 'react';
+import { setupConfig } from '@ens-tools/thorin-core';
+import { mainnet } from 'wagmi/chains';
+import { Config, WagmiProvider } from 'wagmi';
+
+const config = {
+  chains: [mainnet],
+} as unknown as Config;
+
+setupConfig(config);
 
 function App() {
   const [testModal, setTestModal] = useState(false)
   const [connectModal, setConnectModal] = useState(false)
 
   return (
-    <>
+    <WagmiProvider config={config}>
       <h1>I'm a React app using Thorin for Webcomponents</h1>
       <h2>Avatars</h2>
       <ThorinAvatar name="jontes.eth" />
@@ -58,7 +67,7 @@ function App() {
       <ThorinConnectModal open={connectModal} onClose={() => {
         setConnectModal(false)
       }} />
-    </>
+    </WagmiProvider>
   )
 }
 

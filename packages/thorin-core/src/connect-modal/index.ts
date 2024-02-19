@@ -13,9 +13,9 @@ import {
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
-let wagmiConfig = {} as Config;
+let wagmiConfig = {} as Partial<Config>;
 
-export const setupConfig = (config: Config) => {
+export const setupConfig = (config: Partial<Config>) => {
     wagmiConfig = config;
 };
 
@@ -135,7 +135,7 @@ export class ThorinConnectModal extends LitElement {
         } as any;
         const x = wc({ chains: wagmiConfig.chains, emitter }) as any;
 
-        this.connectors = [...getConnectors(wagmiConfig), x];
+        this.connectors = [...getConnectors(wagmiConfig as Config), x];
 
         this.updateWagmiState();
     }
@@ -265,7 +265,7 @@ export class ThorinConnectModal extends LitElement {
         this.connecting = true;
         this.activeConnector = connector;
 
-        connect(wagmiConfig, { connector })
+        connect(wagmiConfig as Config, { connector })
             .catch((error) => {
                 console.log('failed to connect', error);
                 // this.disconnect();
@@ -287,7 +287,7 @@ export class ThorinConnectModal extends LitElement {
         this.activeConnector = undefined;
         this.showQR = undefined;
         this.myAddress = undefined;
-        disconnect(wagmiConfig).finally(() => {
+        disconnect(wagmiConfig as Config).finally(() => {
             console.log('disconnected wagmi');
         });
         this.activeConnector?.disconnect().finally(() => {
@@ -298,7 +298,7 @@ export class ThorinConnectModal extends LitElement {
     }
 
     async updateWagmiState() {
-        const connections = getConnections(wagmiConfig);
+        const connections = getConnections(wagmiConfig as Config);
 
         console.log({ connections });
 
