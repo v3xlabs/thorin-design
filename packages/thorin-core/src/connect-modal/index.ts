@@ -81,6 +81,9 @@ export class ThorinConnectModal extends LitElement {
             height: 24px;
             border-radius: 4px;
         }
+        .max-w-xl {
+            max-width: 360px;
+        }
     `;
 
     @state()
@@ -111,7 +114,7 @@ export class ThorinConnectModal extends LitElement {
                 icons: [],
             },
             showQrModal: false,
-        });
+        })({} as any) as any;
 
         const connectors = getConnectors(wagmiConfig);
 
@@ -165,11 +168,11 @@ export class ThorinConnectModal extends LitElement {
                               )}
                           </div>`
                         : ''}
-                    ${this.currentAccount
+                    ${account
                         ? html`
                               <div class="connected">
                                   <div class="connector-name">
-                                      ${JSON.stringify(this.currentAccount)}
+                                      ${JSON.stringify(account)}
                                   </div>
                                   <div></div>
                               </div>
