@@ -1,7 +1,7 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable sonarjs/no-identical-functions */
 /* eslint-disable unicorn/no-nested-ternary */
-import { walletConnect } from '@wagmi/connectors';
+// import { walletConnect } from '@wagmi/connectors';
 import {
     type Config,
     type Connector,
@@ -106,36 +106,41 @@ export class ThorinConnectModal extends LitElement {
     connecting: boolean = false;
 
     override firstUpdated() {
-        const wc = walletConnect({
-            projectId: 'b451d5ff25d61b3fde7b30f167a5a957',
-            metadata: {
-                name: 'Thorin Design System',
-                description: 'Connect to Thorin Design System',
-                url: 'https://thorin.design',
-                icons: [],
-            },
-            showQrModal: false,
-        });
-        const emitter = {
-            emit: (topic: string, data: any) => {
-                console.log('emitting', topic);
+        // const wc = walletConnect({
+        //     projectId: 'b451d5ff25d61b3fde7b30f167a5a957',
+        //     metadata: {
+        //         name: 'Thorin Design System',
+        //         description: 'Connect to Thorin Design System',
+        //         url: 'https://thorin.design',
+        //         icons: [],
+        //     },
+        //     showQrModal: false,
+        // });
+        // const emitter = {
+        //     emit: (topic: string, data: any) => {
+        //         console.log('emitting', topic);
 
-                if (topic == 'message') {
-                    if (data?.type === 'display_uri') {
-                        this.showQR = data.data;
-                    } else {
-                        console.log('Encountered New Packet from WC:');
-                        console.log(data);
-                    }
-                } else {
-                    console.log('Encountered New Topic from WC:');
-                    console.log(topic, data);
-                }
-            },
-        } as any;
-        const x = wc({ chains: wagmiConfig.chains, emitter }) as any;
+        //         if (topic == 'message') {
+        //             if (data?.type === 'display_uri') {
+        //                 this.showQR = data.data;
+        //             } else {
+        //                 console.log('Encountered New Packet from WC:');
+        //                 console.log(data);
+        //             }
+        //         } else {
+        //             console.log('Encountered New Topic from WC:');
+        //             console.log(topic, data);
+        //         }
+        //     },
+        // } as any;
+        // const x = wc({ chains: wagmiConfig.chains, emitter }) as any;
 
-        this.connectors = [...getConnectors(wagmiConfig), x];
+        const connectors = getConnectors(wagmiConfig);
+
+        console.log({ connectors });
+
+        // this.connectors = [...connectors, wc, x];
+        this.connectors = connectors as any;
 
         this.updateWagmiState();
     }
@@ -154,6 +159,7 @@ export class ThorinConnectModal extends LitElement {
                 }}"
             >
                 <div class="space-y-2">
+                    <span>status ${this.status}</span>
                     ${this.status == 'connected'
                         ? html`<div class="space-y-2">
                               <div class="connected">
@@ -290,14 +296,20 @@ export class ThorinConnectModal extends LitElement {
         disconnect(wagmiConfig).finally(() => {
             console.log('disconnected wagmi');
         });
-        this.activeConnector?.disconnect().finally(() => {
-            console.log('disconnected activeConnector');
-        });
-
         this.updateWagmiState();
     }
 
     async updateWagmiState() {
+        if (
+            !wagmiConfig ||
+            wagmiConfig.state?.connections?.size === 0 ||
+            wagmiConfig.connectors?.length === 0
+        ) {
+            this.status = 'disconnected';
+
+            return;
+        }
+
         const connections = getConnections(wagmiConfig);
 
         console.log({ connections });
@@ -307,11 +319,16 @@ export class ThorinConnectModal extends LitElement {
         }
 
         this.status = wagmiConfig?.state?.status;
+        console.log({ status: wagmiConfig?.state?.status });
 
-        const accounts = await this.activeConnector?.getAccounts();
+        if (this.activeConnector) {
+            const accounts = await this.activeConnector?.getAccounts();
 
-        console.log({ status: this.status, accounts });
-        this.myAddress = accounts?.[0];
+            console.log({ status: this.status, accounts });
+            this.myAddress = accounts?.[0];
+        } else {
+            this.myAddress = undefined;
+        }
     }
 }
 
