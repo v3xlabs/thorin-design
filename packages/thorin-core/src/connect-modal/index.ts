@@ -1,12 +1,15 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable sonarjs/no-identical-functions */
 /* eslint-disable unicorn/no-nested-ternary */
-// import { walletConnect } from '@wagmi/connectors';
+import { walletConnect } from '@wagmi/connectors';
 import {
     type Config,
+    type Connection,
     type Connector,
+    type GetAccountReturnType,
     connect,
     disconnect,
+    getAccount,
     getConnections,
     getConnectors,
 } from '@wagmi/core';
@@ -18,13 +21,6 @@ let wagmiConfig = {} as Config;
 export const setupConfig = (config: Config) => {
     wagmiConfig = config;
 };
-
-// const wagmiConfig = createConfig({
-//     chains: [mainnet],
-//     transports: {
-//         [mainnet.id]: http(),
-//     },
-// });
 
 @customElement('thorin-connect-modal')
 export class ThorinConnectModal extends LitElement {
@@ -88,149 +84,62 @@ export class ThorinConnectModal extends LitElement {
     `;
 
     @state()
-    status: string | undefined = undefined;
-
-    @state()
-    activeConnector: Connector | undefined = undefined;
-
-    @state()
-    myAddress: string | undefined = undefined;
-
-    @state()
     connectors: Connector[] = [];
+
+    @state()
+    connections: Connection[] = [];
 
     @state()
     showQR: string | undefined = undefined;
 
     @state()
+    currentAccount: GetAccountReturnType | undefined = undefined;
+
+    @state()
     connecting: boolean = false;
 
-    override firstUpdated() {
-        // const wc = walletConnect({
-        //     projectId: 'b451d5ff25d61b3fde7b30f167a5a957',
-        //     metadata: {
-        //         name: 'Thorin Design System',
-        //         description: 'Connect to Thorin Design System',
-        //         url: 'https://thorin.design',
-        //         icons: [],
-        //     },
-        //     showQrModal: false,
-        // });
-        // const emitter = {
-        //     emit: (topic: string, data: any) => {
-        //         console.log('emitting', topic);
+    @state()
+    activeConnector: Connector | undefined = undefined;
 
-        //         if (topic == 'message') {
-        //             if (data?.type === 'display_uri') {
-        //                 this.showQR = data.data;
-        //             } else {
-        //                 console.log('Encountered New Packet from WC:');
-        //                 console.log(data);
-        //             }
-        //         } else {
-        //             console.log('Encountered New Topic from WC:');
-        //             console.log(topic, data);
-        //         }
-        //     },
-        // } as any;
-        // const x = wc({ chains: wagmiConfig.chains, emitter }) as any;
+    override firstUpdated() {
+        const wc = walletConnect({
+            projectId: 'b451d5ff25d61b3fde7b30f167a5a957',
+            metadata: {
+                name: 'Thorin Design System',
+                description: 'Connect to Thorin Design System',
+                url: 'https://thorin.design',
+                icons: [],
+            },
+            showQrModal: false,
+        });
 
         const connectors = getConnectors(wagmiConfig);
 
-        console.log({ connectors });
-
-        // this.connectors = [...connectors, wc, x];
-        this.connectors = connectors as any;
-
-        this.updateWagmiState();
+        this.connectors = [...connectors, wc as any];
     }
 
     override render() {
-        this.updateWagmiState();
+        const account = getAccount(wagmiConfig);
+
+        const isSignedIn: boolean = account?.address !== undefined;
+        const isLoading = this.currentAccount?.isConnecting;
+        const isFailing = this.currentAccount?.isDisconnected;
 
         return html`
             <thorin-modal
                 ?open="${this.open}"
-                modalTitle="${this.status == 'connected'
-                    ? 'Wallet Settings'
-                    : 'Connect Wallet'}"
+                modalTitle="${'Connect Wallet'}"
                 @onClose="${() => {
                     this.close();
                 }}"
             >
-                <div class="space-y-2">
-                    <span>status ${this.status}</span>
-                    ${this.status == 'connected'
-                        ? html`<div class="space-y-2">
-                              <div class="connected">
-                                  Connected as ${this.myAddress}
-                              </div>
-                              <div>
-                                  <thorin-button
-                                      variant="subtle"
-                                      width="full"
-                                      .onClick="${() => {
-                                          console.log('FF');
-                                          this.disconnect();
-                                      }}"
-                                      >Disconnect</thorin-button
-                                  >
-                              </div>
-                          </div>`
-                        : ''}
-                    ${this.status == 'connecting' || this.connecting
-                        ? html`<div class="space-y-2">
-                              <div class="connecting-to">
-                                  ${this.activeConnector?.type ==
-                                  'walletConnect'
-                                      ? html`
-                                    ${
-                                        this.showQR
-                                            ? html`<div class="qr">
-                                                  <qr-code
-                                                      data="${this.showQR}"
-                                                  ></qr-code>
-                                              </div>`
-                                            : ''
-                                    }
-                              </div>`
-                                      : html`
-                                          ${
-                                              this.activeConnector?.icon
-                                                  ? html` <img
-                                                        src="${this
-                                                            .activeConnector
-                                                            .icon}"
-                                                        alt="${this
-                                                            .activeConnector
-                                                            .name}"
-                                                    />`
-                                                  : ''
-                                          }
-                                          <div>
-                                              Connecting to
-                                              <span class="connector-name">
-                                                  ${this.activeConnector?.name}
-                                              </span>
-                                          </div>
-                                      </div>
-                              `}
-                              </div>
+                <div class="space-y-2 max-w-xl">
+                    <div>State: ${this.activeConnector?.name}</div>
+                    <div>loading: ${isLoading}</div>
+                    <div>isDisconnected": ${isFailing}</div>
+                    <div>isSignedIn: ${isSignedIn}</div>
 
-                              <div>
-                                  <thorin-button
-                                      variant="subtle"
-                                      width="full"
-                                      .onClick="${() => {
-                                          console.log('FF2');
-                                          this.disconnect();
-                                      }}"
-                                      >Back</thorin-button
-                                  >
-                              </div>
-                          </div>`
-                        : ''}
-                    ${this.status == 'disconnected'
+                    ${!this.connecting
                         ? html` <div class="button-list">
                               ${this.connectors.map(
                                   (connector) =>
@@ -256,6 +165,36 @@ export class ThorinConnectModal extends LitElement {
                               )}
                           </div>`
                         : ''}
+                    ${this.currentAccount
+                        ? html`
+                              <div class="connected">
+                                  <div class="connector-name">
+                                      ${JSON.stringify(this.currentAccount)}
+                                  </div>
+                                  <div></div>
+                              </div>
+                          `
+                        : ''}
+
+                    <div>
+                        <thorin-button
+                            variant="subtle"
+                            width="full"
+                            .onClick="${() => {
+                                console.log('FF2');
+                                this.disconnect();
+                            }}"
+                            >Back</thorin-button
+                        >
+                        <thorin-button
+                            variant="subtle"
+                            width="full"
+                            .onClick="${() => {
+                                this.updateWagmiState();
+                            }}"
+                            >Reload</thorin-button
+                        >
+                    </div>
                 </div>
             </thorin-modal>
         `;
@@ -266,47 +205,82 @@ export class ThorinConnectModal extends LitElement {
     }
 
     _connect(connector: Connector) {
-        // this.activeConnector = connector;
         console.log(connector);
         this.connecting = true;
-        this.activeConnector = connector;
 
-        connect(wagmiConfig, { connector })
-            .catch((error) => {
-                console.log('failed to connect', error);
-                // this.disconnect();
-            })
-            .finally(() => {
-                this.connecting = false;
-                // this.disconnect();
-                // this.open = false;
-                this.updateWagmiState();
-                // this.activeConnector?.getAccounts()?.then((accounts) => {
-                //     console.log({ accounts });
-                //     this.myAddress = accounts[0];
-                // });
+        if (connector.type === 'walletConnect') {
+            connector
+                .connect()
+                .catch((error) => {
+                    console.log('failed to connect', error);
+                    // this.disconnect();
+                })
+                .finally(() => {
+                    this.connecting = false;
+                    this.updateWagmiState();
+                });
+
+            connector.emitter.on('message', (message) => {
+                console.log('BRRR', message);
             });
+        } else {
+            console.log('Starting connection with ' + connector.name);
+            this.activeConnector = connector;
+            connect(wagmiConfig, { connector })
+                .catch((error) => {
+                    console.log('failed to connect', error);
+                    // this.disconnect();
+                    this.activeConnector = undefined;
+                })
+                .finally(() => {
+                    this.connecting = false;
+                    // this.disconnect();
+                    // this.open = false;
+                    this.updateWagmiState();
+                    // this.activeConnector?.getAccounts()?.then((accounts) => {
+                    //     console.log({ accounts });
+                    //     this.myAddress = accounts[0];
+                    // });
+                });
+        }
     }
 
     disconnect() {
-        this.connecting = false;
-        this.activeConnector = undefined;
         this.showQR = undefined;
-        this.myAddress = undefined;
+        this.activeConnector = undefined;
+
         disconnect(wagmiConfig).finally(() => {
             console.log('disconnected wagmi');
+            this.activeConnector = undefined;
+            this.updateWagmiState();
         });
+
+        // const connections = getConnections(wagmiConfig);
+
+        // connections.map((connection) => {
+        //     disconnect(wagmiConfig, { connector: connection.connector }).catch(
+        //         (error) => {
+        //             console.log('failed to disconnect', error);
+        //         }
+        //     );
+        // });
+
         this.updateWagmiState();
+
+        // this.updateWagmiState();
     }
 
     async updateWagmiState() {
+        // const _active = getClient(wagmiConfig);
+        const abc = getAccount(wagmiConfig);
+
+        this.currentAccount = abc;
+
         if (
             !wagmiConfig ||
             wagmiConfig.state?.connections?.size === 0 ||
             wagmiConfig.connectors?.length === 0
         ) {
-            this.status = 'disconnected';
-
             return;
         }
 
@@ -314,21 +288,11 @@ export class ThorinConnectModal extends LitElement {
 
         console.log({ connections });
 
-        if (!this.connecting) {
-            this.activeConnector = connections[0]?.connector;
-        }
+        // if (!this.connecting) {
+        //     this.activeConnector = connections[0]?.connector;
+        // }
 
-        this.status = wagmiConfig?.state?.status;
         console.log({ status: wagmiConfig?.state?.status });
-
-        if (this.activeConnector) {
-            const accounts = await this.activeConnector?.getAccounts();
-
-            console.log({ status: this.status, accounts });
-            this.myAddress = accounts?.[0];
-        } else {
-            this.myAddress = undefined;
-        }
     }
 }
 
