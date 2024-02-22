@@ -164,10 +164,6 @@ export class ThorinConnectModal extends LitElement {
         this.connectors = [...connectors];
     }
 
-    // override connectedCallback(): void {
-    //     this.updateWagmiState();
-    // }
-
     override updated() {
         //     // this.updateWagmiState();
         console.log('updated');
