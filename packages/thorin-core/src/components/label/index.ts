@@ -1,6 +1,8 @@
 /* eslint-disable unicorn/template-indent */
 import { css, html, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+
+import { customElement } from '../../internal/component';
 
 type LabelVariant = 'default' | 'active' | 'helper';
 

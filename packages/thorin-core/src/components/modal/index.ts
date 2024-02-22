@@ -1,5 +1,7 @@
 import { css, html, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
+
+import { customElement } from '../../internal/component';
 
 @customElement('thorin-modal')
 export class ThorinModal extends LitElement {

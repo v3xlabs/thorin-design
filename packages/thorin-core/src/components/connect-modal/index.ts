@@ -17,7 +17,9 @@ import {
 } from '@wagmi/core';
 // import { mainnet } from '@wagmi/core/chains';
 import { css, html, LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+
+import { customElement } from '../../internal/component';
 
 let wagmiConfig = {} as Config;
 
@@ -414,15 +416,24 @@ export class ThorinConnectModal extends LitElement {
     }
 
     disconnect() {
+        console.log('Disconnect Requested!');
         this.showQR = undefined;
         this.activeConnector = undefined;
 
-        disconnect(wagmiConfig).finally(() => {
-            console.log('disconnected wagmi');
-            this.activeConnector = undefined;
-            this.status = 'disconnected';
-            this.updateWagmiState();
-        });
+        disconnect(wagmiConfig)
+            .then(() => {
+                console.log('disconnected');
+            })
+            .catch((error) => {
+                console.log('failed to disconnect', error);
+                this.activeConnector = undefined;
+            })
+            .finally(() => {
+                console.log('disconnected wagmi');
+                this.activeConnector = undefined;
+                this.status = 'disconnected';
+                this.updateWagmiState();
+            });
 
         this.updateWagmiState();
     }
