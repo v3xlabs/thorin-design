@@ -109,6 +109,11 @@ export class ThorinConnectModal extends LitElement {
         .max-w-xl {
             max-width: 360px;
         }
+        @media (max-width: 576px) {
+            .max-w-xl {
+                max-width: 100%;
+            }
+        }
         .connecting {
             display: flex;
             flex-direction: column;
