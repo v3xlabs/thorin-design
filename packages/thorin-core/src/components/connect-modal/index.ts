@@ -80,6 +80,7 @@ export class ThorinConnectModal extends LitElement {
             align-items: center;
             aspect-ratio: 1/1;
             width: 280px;
+            margin: 0 auto;
 
             border-radius: var(--thorin-radius-card);
             overflow: hidden;
@@ -125,6 +126,11 @@ export class ThorinConnectModal extends LitElement {
             margin: 0 auto;
             background: var(--thorin-background-secondary);
             border-radius: var(--thorin-radius-card);
+        }
+        @media (max-width: 576px) {
+            .connecting {
+                max-width: 100%;
+            }
         }
         .connecting .box {
             width: 32px;
