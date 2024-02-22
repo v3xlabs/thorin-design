@@ -8,11 +8,11 @@ import {
     type Config,
     type Connection,
     type Connector,
+    type ConnectorEventMap,
     type GetAccountReturnType,
     connect,
     disconnect,
     getAccount,
-    getConnections,
     getConnectors,
 } from '@wagmi/core';
 // import { mainnet } from '@wagmi/core/chains';
@@ -127,6 +127,12 @@ export class ThorinConnectModal extends LitElement {
         .name {
             font-weight: 600;
         }
+        .qr {
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     `;
 
     @state()
@@ -153,57 +159,24 @@ export class ThorinConnectModal extends LitElement {
         | 'reconnecting' = 'disconnected';
 
     override firstUpdated() {
-        // const wc = walletConnect({
-        //     projectId: 'b451d5ff25d61b3fde7b30f167a5a957',
-        //     metadata: {
-        //         name: 'Thorin Design System',
-        //         description: 'Connect to Thorin Design System',
-        //         url: 'https://thorin.design',
-        //         icons: [],
-        //     },
-        //     showQrModal: false,
-        // })({
-        //     chains: [mainnet],
-        //     emitter: {
-        //         emit: (event, data) => {
-        //             if (
-        //                 event == 'message' &&
-        //                 data?.type == 'display_uri' &&
-        //                 data?.data
-        //             ) {
-        //                 wcLog('Display URI', data?.data);
-        //                 this.showQR = data?.data;
-
-        //                 return;
-        //             }
-
-        //             wcLog('Unknown Data,', event, data);
-        //         },
-        //     },
-        // } as any) as any;
-
         const connectors = getConnectors(wagmiConfig);
 
         this.connectors = [...connectors];
+    }
+
+    // override connectedCallback(): void {
+    //     this.updateWagmiState();
+    // }
+
+    override updated() {
+        //     // this.updateWagmiState();
+        console.log('updated');
     }
 
     override render() {
         const account = getAccount(wagmiConfig);
 
         const isWalletConnect = this.activeConnector?.type === 'walletConnect';
-
-        this.updateWagmiState();
-
-        // if (
-        //     account?.status != this.status &&
-        //     !['errored'].includes(this.status)
-        // ) {
-        //     this.status = account?.status;
-        // }
-
-        // if (this.activeConnector != account.connector && account.isConnected) {
-        //     this.activeConnector = account.connector;
-        // }
 
         const isLoading = this.status === 'connecting';
         const isDisconnected = this.status === 'disconnected';
@@ -222,23 +195,35 @@ export class ThorinConnectModal extends LitElement {
                 <div class="space-y-2 max-w-xl">
                     ${isWalletConnect
                         ? html`
-                              <div>
-                                  ${this.showQR
-                                      ? html`
-                                            <div class="qr">
-                                                <qr-code
-                                                    data="${this.showQR}"
-                                                ></qr-code>
-                                            </div>
-                                        `
-                                      : ''}
-
-                                  <div>
-                                      ${!this.showQR
-                                          ? html` <div>Loading...</div> `
-                                          : ''}
-                                  </div>
-                              </div>
+                              ${isConnected
+                                  ? ''
+                                  : html`
+                                        ${this.showQR
+                                            ? html`
+                                                  <div class="qr">
+                                                      <a
+                                                          href="${this.showQR}"
+                                                          target="_blank"
+                                                      >
+                                                          <qr-code
+                                                              data="${this
+                                                                  .showQR}"
+                                                          ></qr-code>
+                                                      </a>
+                                                  </div>
+                                              `
+                                            : ''}
+                                        <div>
+                                            ${!this.showQR
+                                                ? html`
+                                                      <div>
+                                                          Connecting to
+                                                          WalletConnect...
+                                                      </div>
+                                                  `
+                                                : ''}
+                                        </div>
+                                    `}
                           `
                         : html` <div>
                               ${isLoading
@@ -298,27 +283,27 @@ export class ThorinConnectModal extends LitElement {
                                         )}
                                     </div>`
                                   : ''}
-                              ${isConnected
-                                  ? html`
-                                        <div class="connected">
-                                            <div class="connector-name">
-                                                ${JSON.stringify(
-                                                    account.address
-                                                )}
-                                            </div>
-                                            <div></div>
-                                        </div>
-                                    `
-                                  : ''}
-                              ${isErrored
-                                  ? html`
-                                        <div class="connecting">
-                                            Failed to connect to
-                                            ${this.activeConnector?.name}
-                                        </div>
-                                    `
-                                  : ''}
                           </div>`}
+                    ${isConnected
+                        ? html`
+                              <div class="connected">
+                                  <div class="connector-name">
+                                      ${this.activeConnector?.name}
+                                  </div>
+                                  <div class="connector-name">
+                                      ${JSON.stringify(account.address)}
+                                  </div>
+                              </div>
+                          `
+                        : ''}
+                    ${isErrored
+                        ? html`
+                              <div class="connecting">
+                                  Failed to connect to
+                                  ${this.activeConnector?.name}
+                              </div>
+                          `
+                        : ''}
                     ${[
                         isConnected,
                         isReconnecting,
@@ -356,17 +341,45 @@ export class ThorinConnectModal extends LitElement {
         console.log(connector);
         this.status == 'connecting';
 
-        if (connector.type === 'walletConnectz') {
+        if (connector.type === 'walletConnect') {
             wcLog('connect', 'Starting connection with walletConnect');
             this.activeConnector = connector;
-            connector
-                .connect()
+
+            const wc_on_message = ({
+                type,
+                data,
+            }: ConnectorEventMap['message']) => {
+                if (type === 'display_uri' && data) {
+                    wcLog('Display URI', data as string);
+                    this.showQR = data as string;
+                }
+            };
+
+            const wc_on_change = ({
+                accounts,
+                chainId,
+            }: ConnectorEventMap['change']) => {
+                wcLog('on_connect', { accounts, chainId });
+                this.updateWagmiState();
+            };
+
+            this.activeConnector.emitter?.on('message', wc_on_message);
+            this.activeConnector.emitter?.on('change', wc_on_change);
+
+            this.activeConnector.emitter.once('disconnect', () => {
+                wcLog('disconnect');
+                connector.emitter.off('message', wc_on_message);
+                connector.emitter.off('change', wc_on_change);
+                this.disconnect();
+            });
+
+            connect(wagmiConfig, { connector })
                 .then((value) => {
                     wcLog('connected', value);
                     this.status = 'connected';
                 })
                 .catch((error) => {
-                    if (this.currentAccount?.isConnected) {
+                    if (this.currentAccount.isConnected) {
                         wcLog('Silently erroring out', error);
 
                         return;
@@ -376,10 +389,9 @@ export class ThorinConnectModal extends LitElement {
                     this.status = 'errored';
                 })
                 .finally(() => {
-                    wcLog('finally2');
+                    wcLog('finally');
                     this.updateWagmiState();
                 });
-            this.updateWagmiState();
         } else {
             console.log('Starting connection with ' + connector.name);
             this.activeConnector = connector;
@@ -416,28 +428,18 @@ export class ThorinConnectModal extends LitElement {
             this.updateWagmiState();
         });
 
-        // const connections = getConnections(wagmiConfig);
-
-        // connections.map((connection) => {
-        //     disconnect(wagmiConfig, { connector: connection.connector }).catch(
-        //         (error) => {
-        //             console.log('failed to disconnect', error);
-        //         }
-        //     );
-        // });
-
         this.updateWagmiState();
-
-        // this.updateWagmiState();
     }
 
     async updateWagmiState() {
         // const _active = getClient(wagmiConfig);
+        console.log({ open: this.open });
+
+        if (!this.open) return;
+
         const account = getAccount(wagmiConfig);
 
         this.currentAccount = account;
-        // this.activeConnector = account?.connector;
-        // this.status = account?.status;
 
         console.log('updating wagmi state', account?.status);
 
@@ -459,14 +461,6 @@ export class ThorinConnectModal extends LitElement {
         ) {
             return;
         }
-
-        const connections = getConnections(wagmiConfig);
-
-        console.log({ connections });
-
-        // if (!this.connecting) {
-        //     this.activeConnector = connections[0]?.connector;
-        // }
 
         console.log({ status: wagmiConfig?.state?.status });
     }
