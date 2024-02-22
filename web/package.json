@@ -13,6 +13,7 @@
     "license": "LGPL-3.0-only",
     "dependencies": {
         "@ens-tools/thorin-core": "workspace:*",
+        "@wagmi/connectors": "^4.1.14",
         "@wagmi/core": "^2.6.5",
         "vite": "^5.1.2",
         "wagmi": "^2.5.7",
