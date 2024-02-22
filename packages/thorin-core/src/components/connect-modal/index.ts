@@ -172,7 +172,10 @@ export class ThorinConnectModal extends LitElement {
     }
 
     override render() {
-        const account = getAccount(wagmiConfig);
+        const account =
+            wagmiConfig && wagmiConfig?.state
+                ? getAccount(wagmiConfig)
+                : undefined;
 
         const isWalletConnect = this.activeConnector?.type === 'walletConnect';
 
