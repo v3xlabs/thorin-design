@@ -66,6 +66,9 @@ export class ThorinConnectModal extends LitElement {
             padding: var(--thorin-spacing-4);
             background: var(--thorin-green-surface);
             color: var(--thorin-text-primary);
+            max-width: 300px;
+            text-overflow: unset;
+            white-space: normal;
         }
         .space-y-2 > *:last-child {
             margin-top: var(--thorin-spacing-2);
@@ -84,6 +87,18 @@ export class ThorinConnectModal extends LitElement {
         .max-w-xl {
             max-width: 360px;
         }
+        .connecting {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            aspect-ratio: 1/1;
+            width: 100%;
+            max-width: 360px;
+            margin: 0 auto;
+            background: var(--thorin-background-secondary);
+            border-radius: var(--thorin-radius-card);
+        }
     `;
 
     @state()
@@ -99,10 +114,15 @@ export class ThorinConnectModal extends LitElement {
     currentAccount: GetAccountReturnType | undefined = undefined;
 
     @state()
-    connecting: boolean = false;
+    activeConnector: Connector | undefined = undefined;
 
     @state()
-    activeConnector: Connector | undefined = undefined;
+    status:
+        | 'connecting'
+        | 'connected'
+        | 'disconnected'
+        | 'errored'
+        | 'reconnecting' = 'disconnected';
 
     override firstUpdated() {
         const wc = walletConnect({
@@ -124,9 +144,16 @@ export class ThorinConnectModal extends LitElement {
     override render() {
         const account = getAccount(wagmiConfig);
 
-        const isSignedIn: boolean = account?.address !== undefined;
-        const isLoading = this.currentAccount?.isConnecting;
-        const isFailing = this.currentAccount?.isDisconnected;
+        if (
+            account?.status != this.status &&
+            !['errored'].includes(this.status)
+        ) {
+            this.status = account?.status;
+        }
+
+        if (this.activeConnector != account.connector && account.isConnected) {
+            this.activeConnector = account.connector;
+        }
 
         return html`
             <thorin-modal
@@ -137,12 +164,20 @@ export class ThorinConnectModal extends LitElement {
                 }}"
             >
                 <div class="space-y-2 max-w-xl">
-                    <div>State: ${this.activeConnector?.name}</div>
-                    <div>loading: ${isLoading}</div>
-                    <div>isDisconnected": ${isFailing}</div>
-                    <div>isSignedIn: ${isSignedIn}</div>
-
-                    ${!this.connecting
+                    <div>Connector: ${this.activeConnector?.name}</div>
+                    ${this.status == 'connecting'
+                        ? html` <div class="connecting">
+                              <div class="box"></div>
+                              <div>
+                                  Connecting to ${this.activeConnector?.name}
+                              </div>
+                              <div>
+                                  You may want to check your wallet to approve
+                                  the connection
+                              </div>
+                          </div>`
+                        : ''}
+                    ${this.status === 'disconnected'
                         ? html` <div class="button-list">
                               ${this.connectors.map(
                                   (connector) =>
@@ -168,36 +203,47 @@ export class ThorinConnectModal extends LitElement {
                               )}
                           </div>`
                         : ''}
-                    ${account
+                    ${this.status === 'connected'
                         ? html`
                               <div class="connected">
                                   <div class="connector-name">
-                                      ${JSON.stringify(account)}
+                                      ${JSON.stringify(account.address)}
                                   </div>
                                   <div></div>
                               </div>
                           `
                         : ''}
-
-                    <div>
-                        <thorin-button
-                            variant="subtle"
-                            width="full"
-                            .onClick="${() => {
-                                console.log('FF2');
-                                this.disconnect();
-                            }}"
-                            >Back</thorin-button
-                        >
-                        <thorin-button
-                            variant="subtle"
-                            width="full"
-                            .onClick="${() => {
-                                this.updateWagmiState();
-                            }}"
-                            >Reload</thorin-button
-                        >
-                    </div>
+                    ${this.status == 'errored'
+                        ? html`
+                              <div class="connecting">
+                                  Failed to connect to
+                                  ${this.activeConnector?.name}
+                              </div>
+                          `
+                        : ''}
+                    ${[
+                        'connected',
+                        'reconnecting',
+                        'connecting',
+                        'errored',
+                    ].includes(this.status)
+                        ? html`
+                              <div>
+                                  <thorin-button
+                                      variant="subtle"
+                                      width="full"
+                                      .onClick="${() => {
+                                          console.log('FF2');
+                                          this.disconnect();
+                                      }}"
+                                  >
+                                      ${this.status === 'connected'
+                                          ? 'Disconnect'
+                                          : 'Cancel'}
+                                  </thorin-button>
+                              </div>
+                          `
+                        : ''}
                 </div>
             </thorin-modal>
         `;
@@ -209,17 +255,16 @@ export class ThorinConnectModal extends LitElement {
 
     _connect(connector: Connector) {
         console.log(connector);
-        this.connecting = true;
+        this.status == 'connecting';
 
         if (connector.type === 'walletConnect') {
             connector
                 .connect()
                 .catch((error) => {
                     console.log('failed to connect', error);
-                    // this.disconnect();
+                    this.status = 'errored';
                 })
                 .finally(() => {
-                    this.connecting = false;
                     this.updateWagmiState();
                 });
 
@@ -230,20 +275,23 @@ export class ThorinConnectModal extends LitElement {
             console.log('Starting connection with ' + connector.name);
             this.activeConnector = connector;
             connect(wagmiConfig, { connector })
+                .then((value) => {
+                    console.log('connected', value);
+                    this.status = 'connected';
+                })
                 .catch((error) => {
+                    if (this.currentAccount.isConnected) {
+                        console.log('Silently erroring out', error);
+
+                        return;
+                    }
+
                     console.log('failed to connect', error);
-                    // this.disconnect();
-                    this.activeConnector = undefined;
+                    this.status = 'errored';
                 })
                 .finally(() => {
-                    this.connecting = false;
-                    // this.disconnect();
-                    // this.open = false;
+                    console.log('finally');
                     this.updateWagmiState();
-                    // this.activeConnector?.getAccounts()?.then((accounts) => {
-                    //     console.log({ accounts });
-                    //     this.myAddress = accounts[0];
-                    // });
                 });
         }
     }
@@ -255,6 +303,7 @@ export class ThorinConnectModal extends LitElement {
         disconnect(wagmiConfig).finally(() => {
             console.log('disconnected wagmi');
             this.activeConnector = undefined;
+            this.status = 'disconnected';
             this.updateWagmiState();
         });
 
