@@ -1,7 +1,9 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable sonarjs/no-identical-functions */
 /* eslint-disable unicorn/no-nested-ternary */
-import { walletConnect } from '@wagmi/connectors';
+import 'webcomponent-qr-code';
+
+// import { walletConnect } from '@wagmi/connectors';
 import {
     type Config,
     type Connection,
@@ -13,6 +15,7 @@ import {
     getConnections,
     getConnectors,
 } from '@wagmi/core';
+// import { mainnet } from '@wagmi/core/chains';
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
@@ -20,6 +23,17 @@ let wagmiConfig = {} as Config;
 
 export const setupConfig = (config: Config) => {
     wagmiConfig = config;
+};
+
+const wcLog = (event: string, ...data: (string | object)[]) => {
+    console.log(
+        '%c[WC]',
+        'color: #3396ff',
+        event,
+        data
+            .map((d) => (typeof d === 'string' ? d : JSON.stringify(d)))
+            .join(' ')
+    );
 };
 
 @customElement('thorin-connect-modal')
@@ -99,6 +113,20 @@ export class ThorinConnectModal extends LitElement {
             background: var(--thorin-background-secondary);
             border-radius: var(--thorin-radius-card);
         }
+        .connecting .box {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--thorin-radius-card);
+            background: var(--thorin-background-secondary);
+            overflow: hidden;
+        }
+        .connecting .box img {
+            width: 100%;
+            height: 100%;
+        }
+        .name {
+            font-weight: 600;
+        }
     `;
 
     @state()
@@ -125,35 +153,63 @@ export class ThorinConnectModal extends LitElement {
         | 'reconnecting' = 'disconnected';
 
     override firstUpdated() {
-        const wc = walletConnect({
-            projectId: 'b451d5ff25d61b3fde7b30f167a5a957',
-            metadata: {
-                name: 'Thorin Design System',
-                description: 'Connect to Thorin Design System',
-                url: 'https://thorin.design',
-                icons: [],
-            },
-            showQrModal: false,
-        })({} as any) as any;
+        // const wc = walletConnect({
+        //     projectId: 'b451d5ff25d61b3fde7b30f167a5a957',
+        //     metadata: {
+        //         name: 'Thorin Design System',
+        //         description: 'Connect to Thorin Design System',
+        //         url: 'https://thorin.design',
+        //         icons: [],
+        //     },
+        //     showQrModal: false,
+        // })({
+        //     chains: [mainnet],
+        //     emitter: {
+        //         emit: (event, data) => {
+        //             if (
+        //                 event == 'message' &&
+        //                 data?.type == 'display_uri' &&
+        //                 data?.data
+        //             ) {
+        //                 wcLog('Display URI', data?.data);
+        //                 this.showQR = data?.data;
+
+        //                 return;
+        //             }
+
+        //             wcLog('Unknown Data,', event, data);
+        //         },
+        //     },
+        // } as any) as any;
 
         const connectors = getConnectors(wagmiConfig);
 
-        this.connectors = [...connectors, wc as any];
+        this.connectors = [...connectors];
     }
 
     override render() {
         const account = getAccount(wagmiConfig);
 
-        if (
-            account?.status != this.status &&
-            !['errored'].includes(this.status)
-        ) {
-            this.status = account?.status;
-        }
+        const isWalletConnect = this.activeConnector?.type === 'walletConnect';
 
-        if (this.activeConnector != account.connector && account.isConnected) {
-            this.activeConnector = account.connector;
-        }
+        this.updateWagmiState();
+
+        // if (
+        //     account?.status != this.status &&
+        //     !['errored'].includes(this.status)
+        // ) {
+        //     this.status = account?.status;
+        // }
+
+        // if (this.activeConnector != account.connector && account.isConnected) {
+        //     this.activeConnector = account.connector;
+        // }
+
+        const isLoading = this.status === 'connecting';
+        const isDisconnected = this.status === 'disconnected';
+        const isConnected = this.status === 'connected';
+        const isErrored = this.status === 'errored';
+        const isReconnecting = this.status === 'reconnecting';
 
         return html`
             <thorin-modal
@@ -164,69 +220,112 @@ export class ThorinConnectModal extends LitElement {
                 }}"
             >
                 <div class="space-y-2 max-w-xl">
-                    <div>Connector: ${this.activeConnector?.name}</div>
-                    ${this.status == 'connecting'
-                        ? html` <div class="connecting">
-                              <div class="box"></div>
-                              <div>
-                                  Connecting to ${this.activeConnector?.name}
-                              </div>
-                              <div>
-                                  You may want to check your wallet to approve
-                                  the connection
-                              </div>
-                          </div>`
-                        : ''}
-                    ${this.status === 'disconnected'
-                        ? html` <div class="button-list">
-                              ${this.connectors.map(
-                                  (connector) =>
-                                      html`
-                                          <thorin-button
-                                              variant="subtle"
-                                              width="full"
-                                              .onClick=${() =>
-                                                  this._connect(connector)}
-                                          >
-                                              <div class="connector">
-                                                  ${connector.icon
-                                                      ? html`<img
-                                                            src="${connector.icon}"
-                                                            alt="${connector.name}"
-                                                            class="connector-icon"
-                                                        />`
-                                                      : ''}
-                                                  <span>${connector.name}</span>
-                                              </div>
-                                          </thorin-button>
-                                      `
-                              )}
-                          </div>`
-                        : ''}
-                    ${this.status === 'connected'
+                    ${isWalletConnect
                         ? html`
-                              <div class="connected">
-                                  <div class="connector-name">
-                                      ${JSON.stringify(account.address)}
+                              <div>
+                                  ${this.showQR
+                                      ? html`
+                                            <div class="qr">
+                                                <qr-code
+                                                    data="${this.showQR}"
+                                                ></qr-code>
+                                            </div>
+                                        `
+                                      : ''}
+
+                                  <div>
+                                      ${!this.showQR
+                                          ? html` <div>Loading...</div> `
+                                          : ''}
                                   </div>
-                                  <div></div>
                               </div>
                           `
-                        : ''}
-                    ${this.status == 'errored'
-                        ? html`
-                              <div class="connecting">
-                                  Failed to connect to
-                                  ${this.activeConnector?.name}
-                              </div>
-                          `
-                        : ''}
+                        : html` <div>
+                              ${isLoading
+                                  ? html` <div class="connecting">
+                                        <div class="box">
+                                            ${this.activeConnector?.icon
+                                                ? html`<img
+                                                      src="${this
+                                                          .activeConnector
+                                                          ?.icon}"
+                                                      alt="${this
+                                                          .activeConnector
+                                                          ?.name}"
+                                                  />`
+                                                : ''}
+                                        </div>
+                                        <div>
+                                            Connecting to
+                                            <span class="name"
+                                                >${this.activeConnector
+                                                    ?.name}</span
+                                            >
+                                        </div>
+                                        <div>
+                                            You may want to check your wallet to
+                                            approve the connection
+                                        </div>
+                                    </div>`
+                                  : ''}
+                              ${isDisconnected
+                                  ? html` <div class="button-list">
+                                        ${this.connectors.map(
+                                            (connector) =>
+                                                html`
+                                                    <thorin-button
+                                                        variant="subtle"
+                                                        width="full"
+                                                        .onClick=${() =>
+                                                            this._connect(
+                                                                connector
+                                                            )}
+                                                    >
+                                                        <div class="connector">
+                                                            ${connector.icon
+                                                                ? html`<img
+                                                                      src="${connector.icon}"
+                                                                      alt="${connector.name}"
+                                                                      class="connector-icon"
+                                                                  />`
+                                                                : ''}
+                                                            <span
+                                                                >${connector.name}</span
+                                                            >
+                                                        </div>
+                                                    </thorin-button>
+                                                `
+                                        )}
+                                    </div>`
+                                  : ''}
+                              ${isConnected
+                                  ? html`
+                                        <div class="connected">
+                                            <div class="connector-name">
+                                                ${JSON.stringify(
+                                                    account.address
+                                                )}
+                                            </div>
+                                            <div></div>
+                                        </div>
+                                    `
+                                  : ''}
+                              ${isErrored
+                                  ? html`
+                                        <div class="connecting">
+                                            Failed to connect to
+                                            ${this.activeConnector?.name}
+                                        </div>
+                                    `
+                                  : ''}
+                          </div>`}
                     ${[
-                        'connected',
-                        'reconnecting',
-                        'connecting',
-                        'errored',
-                    ].includes(this.status)
+                        isConnected,
+                        isReconnecting,
+                        isLoading,
+                        isErrored,
+                        isWalletConnect && !isConnected,
+                    ].some(Boolean)
                         ? html`
                               <div>
                                   <thorin-button
@@ -257,20 +356,30 @@ export class ThorinConnectModal extends LitElement {
         console.log(connector);
         this.status == 'connecting';
 
-        if (connector.type === 'walletConnect') {
+        if (connector.type === 'walletConnectz') {
+            wcLog('connect', 'Starting connection with walletConnect');
+            this.activeConnector = connector;
             connector
                 .connect()
+                .then((value) => {
+                    wcLog('connected', value);
+                    this.status = 'connected';
+                })
                 .catch((error) => {
-                    console.log('failed to connect', error);
+                    if (this.currentAccount?.isConnected) {
+                        wcLog('Silently erroring out', error);
+
+                        return;
+                    }
+
+                    wcLog('failed to connect', error);
                     this.status = 'errored';
                 })
                 .finally(() => {
+                    wcLog('finally2');
                     this.updateWagmiState();
                 });
-
-            connector.emitter.on('message', (message) => {
-                console.log('BRRR', message);
-            });
+            this.updateWagmiState();
         } else {
             console.log('Starting connection with ' + connector.name);
             this.activeConnector = connector;
@@ -324,9 +433,24 @@ export class ThorinConnectModal extends LitElement {
 
     async updateWagmiState() {
         // const _active = getClient(wagmiConfig);
-        const abc = getAccount(wagmiConfig);
+        const account = getAccount(wagmiConfig);
 
-        this.currentAccount = abc;
+        this.currentAccount = account;
+        // this.activeConnector = account?.connector;
+        // this.status = account?.status;
+
+        console.log('updating wagmi state', account?.status);
+
+        if (
+            account?.status != this.status &&
+            !['errored'].includes(this.status)
+        ) {
+            this.status = account?.status;
+        }
+
+        if (this.activeConnector != account.connector && account.isConnected) {
+            this.activeConnector = account.connector;
+        }
 
         if (
             !wagmiConfig ||
