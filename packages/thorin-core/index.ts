@@ -1,9 +1,9 @@
-export * from './src/avatar/index.js';
-export * from './src/button/index.js';
-export * from './src/connect-modal/index.js';
-export * from './src/label/index.js';
-export * from './src/modal/index.js';
-export * from './src/tag/index.js';
+export * from './src/components/avatar/index.js';
+export * from './src/components/button/index.js';
+export * from './src/components/connect-modal/index.js';
+export * from './src/components/label/index.js';
+export * from './src/components/modal/index.js';
+export * from './src/components/tag/index.js';
 import './index.js';
 
 export const hello = () => {
