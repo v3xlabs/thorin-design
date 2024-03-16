@@ -1,4 +1,4 @@
-import { ThorinConnectModal as Webcomponent } from '@ens-tools/thorin-core';
+import { ThorinConnectModal as Webcomponent, setupConfig as ThorinSetupConfig } from '@ens-tools/thorin-core';
 import { createComponent } from '@lit/react';
 import React from 'react';
 
@@ -18,3 +18,5 @@ export const ThorinConnectModal: React.FC<ThorinConnectModalProperties> =
             onClose: 'onClose',
         },
     });
+
+export const setupConfig = ThorinSetupConfig

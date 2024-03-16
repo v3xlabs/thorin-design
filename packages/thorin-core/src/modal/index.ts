@@ -75,6 +75,7 @@ export class ThorinModal extends LitElement {
             font-weight: bold;
             font-size: 20px;
             padding-bottom: var(--thorin-spacing-2);
+            color: var(--thorin-text-primary)
         }
         dialog::backdrop {
             background-image: linear-gradient(
