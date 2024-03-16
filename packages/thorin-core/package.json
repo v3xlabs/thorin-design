@@ -6,7 +6,8 @@
     "types": "./dist/types/index.d.ts",
     "exports": {
         ".": "./dist/esm/index.js",
-        "./style.css": "./dist/style.css"
+        "./style.css": "./dist/style.css",
+        "./types": "./dist/types/index.d.ts"
     },
     "files": [
         "dist",

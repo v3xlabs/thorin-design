@@ -1,27 +1,41 @@
-import type { ThorinButton } from '@ens-tools/thorin-core';
-import type { DOMAttributes } from 'react';
+import { ThorinButton as Webcomponent } from '@ens-tools/thorin-core';
+import { createComponent } from '@lit/react';
+import React from 'react';
 
-// export const ThorinButton = createComponent({
-//     tagName: 'thorin-button',
-//     elementClass: ThorinButtonX,
-//     react: React,
-//     events: {
-//         onclick: 'click',
-//     },
-// });
+type ButtonActionVariant =
+    | 'primary'
+    | 'secondary'
+    | 'error'
+    | 'error-secondary'
+    | 'subtle'
+    | 'disabled';
+type ButtonColorVariant =
+    | 'blue'
+    | 'indigo'
+    | 'purple'
+    | 'pink'
+    | 'red'
+    | 'orange'
+    | 'yellow'
+    | 'green'
+    | 'grey';
+type ButtonVariant = ButtonActionVariant | ButtonColorVariant;
 
-type CustomEvents<K extends string> = {
-    [key in K]: (event: CustomEvent) => void;
-};
-
-type CustomElement<T, K extends string> = Partial<
-    T & DOMAttributes<T> & { children: any } & CustomEvents<`on${K}`>
->;
-
-declare global {
-    namespace JSX {
-        interface IntrinsicElements {
-            ['thorin-button']: CustomElement<typeof ThorinButton, 'onClick'>;
-        }
-    }
+export interface ThorinButtonProperties {
+    variant?: ButtonVariant;
+    children?: React.ReactNode;
+    width?: 'auto' | 'full';
+    onClick?: (_event: PointerEvent) => void;
+    href?: string | undefined;
+    target?: string | undefined;
 }
+
+// Create the component with the defined properties
+export const ThorinButton: React.FC<ThorinButtonProperties> = createComponent({
+    tagName: 'thorin-button',
+    elementClass: Webcomponent,
+    react: React,
+    events: {
+        onClick: 'click',
+    },
+});
