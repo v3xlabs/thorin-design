@@ -21,6 +21,7 @@ import { css, html, LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
 import { customElement } from '../../internal/component';
+import { styles } from '../../styles';
 
 let getWagmiConfig = () => ({} as Config);
 
@@ -50,119 +51,122 @@ export class ThorinConnectModal extends LitElement {
     @property({ type: Boolean, reflect: true })
     open = false;
 
-    static override styles = css`
-        .button-list {
-            display: grid;
-            // auto height make everything equal height
-            grid-template-columns: 1fr; /* One column */
-            grid-auto-rows: minmax(
-                min-content,
-                max-content
-            ); /* Automatically size rows */
-            gap: var(--thorin-spacing-2);
-        }
-        .connecting-to {
-            aspect-ratio: 1/1;
-            width: 100%;
-            background: var(--thorin-background-secondary);
-            border-radius: var(--thorin-radius-card);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: var(--thorin-spacing-2);
-        }
-        .connecting-to img {
-            width: 48px;
-            height: 48px;
-            border-radius: 4px;
-            object-fit: contain;
-        }
-        .connector-name {
-            font-weight: 600;
-        }
-        .qr {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            aspect-ratio: 1/1;
-            width: 280px;
-            margin: 0 auto;
+    static override styles = [
+        styles.base,
+        css`
+            .button-list {
+                display: grid;
+                // auto height make everything equal height
+                grid-template-columns: 1fr; /* One column */
+                grid-auto-rows: minmax(
+                    min-content,
+                    max-content
+                ); /* Automatically size rows */
+                gap: var(--thorin-spacing-2);
+            }
+            .connecting-to {
+                aspect-ratio: 1/1;
+                width: 100%;
+                background: var(--thorin-background-secondary);
+                border-radius: var(--thorin-radius-card);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: var(--thorin-spacing-2);
+            }
+            .connecting-to img {
+                width: 48px;
+                height: 48px;
+                border-radius: 4px;
+                object-fit: contain;
+            }
+            .connector-name {
+                font-weight: 600;
+            }
+            .qr {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                aspect-ratio: 1/1;
+                width: 280px;
+                margin: 0 auto;
 
-            border-radius: var(--thorin-radius-card);
-            overflow: hidden;
-        }
-        .connected {
-            padding: var(--thorin-spacing-4);
-            background: var(--thorin-green-surface);
-            color: var(--thorin-text-primary);
-            max-width: 300px;
-            text-overflow: unset;
-            white-space: normal;
-        }
-        .space-y-2 > *:last-child {
-            margin-top: var(--thorin-spacing-2);
-        }
-        .connector {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-        }
-        .connector-icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 4px;
-        }
-        .max-w-xl {
-            max-width: 360px;
-        }
-        @media (max-width: 576px) {
+                border-radius: var(--thorin-radius-card);
+                overflow: hidden;
+            }
+            .connected {
+                padding: var(--thorin-spacing-4);
+                background: var(--thorin-green-surface);
+                color: var(--thorin-text-primary);
+                max-width: 300px;
+                text-overflow: unset;
+                white-space: normal;
+            }
+            .space-y-2 > *:last-child {
+                margin-top: var(--thorin-spacing-2);
+            }
+            .connector {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 8px;
+            }
+            .connector-icon {
+                width: 24px;
+                height: 24px;
+                border-radius: 4px;
+            }
             .max-w-xl {
-                max-width: 100%;
+                max-width: 360px;
             }
-        }
-        .connecting {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            aspect-ratio: 1/1;
-            width: 100%;
-            max-width: 360px;
-            margin: 0 auto;
-            background: var(--thorin-background-secondary);
-            border-radius: var(--thorin-radius-card);
-            padding: var(--thorin-spacing-4);
-            box-sizing: border-box;
-        }
-        @media (max-width: 576px) {
+            @media (max-width: 576px) {
+                .max-w-xl {
+                    max-width: 100%;
+                }
+            }
             .connecting {
-                max-width: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                aspect-ratio: 1/1;
+                width: 100%;
+                max-width: 360px;
+                margin: 0 auto;
+                background: var(--thorin-background-secondary);
+                border-radius: var(--thorin-radius-card);
+                padding: var(--thorin-spacing-4);
+                box-sizing: border-box;
             }
-        }
-        .connecting .box {
-            width: 32px;
-            height: 32px;
-            border-radius: 4px;
-            background: var(--thorin-background-secondary);
-            overflow: hidden;
-        }
-        .connecting .box img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-        .name {
-            font-weight: 600;
-        }
-        .qr {
-            margin: 0 auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-    `;
+            @media (max-width: 576px) {
+                .connecting {
+                    max-width: 100%;
+                }
+            }
+            .connecting .box {
+                width: 32px;
+                height: 32px;
+                border-radius: 4px;
+                background: var(--thorin-background-secondary);
+                overflow: hidden;
+            }
+            .connecting .box img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+            .name {
+                font-weight: 600;
+            }
+            .qr {
+                margin: 0 auto;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        `,
+    ];
 
     @state()
     connections: Connection[] = [];

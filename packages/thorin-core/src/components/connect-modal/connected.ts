@@ -1,5 +1,3 @@
-// import { walletConnect } from '@wagmi/connectors';
-// import { mainnet } from '@wagmi/core/chains';
 import { formatAddress } from '@ens-tools/format';
 import type { Connector } from '@wagmi/core';
 import { css, html, LitElement } from 'lit';
@@ -7,6 +5,7 @@ import { property, state } from 'lit/decorators.js';
 import type { Address } from 'viem';
 
 import { customElement } from '../../internal/component';
+import { styles } from '../../styles';
 
 type ENSData = {
     avatar?: string;
@@ -20,72 +19,75 @@ export class ThorinConnectModalConnected extends LitElement {
     @property({ type: String, reflect: true })
     address: Address | undefined = undefined;
 
-    static override styles = css`
-        .connected {
-            display: flex;
-            flex-direction: column;
-            gap: var(--thorin-spacing-2);
-        }
-        .connector {
-            padding: var(--thorin-spacing-4);
-            border: 1px solid var(--thorin-border);
-            border-radius: var(--thorin-radius-card);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 8px;
-        }
-        .connector-internal {
-            display: flex;
-            align-items: center;
-            gap: var(--thorin-spacing-2);
-        }
-        .connector-image {
-            width: 24px;
-            height: 24px;
-            border-radius: 4px;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .connector-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-        .profile {
-            border: 1px solid var(--thorin-border);
-            border-radius: var(--thorin-radius-card);
-            padding: var(--thorin-spacing-4);
-            display: flex;
-            flex-direction: column;
-            gap: var(--thorin-spacing-2);
-        }
-        .profile .row-1 {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: var(--thorin-spacing-2);
-        }
-        .profile .row-1 .left {
-            display: flex;
-            align-items: center;
-            gap: var(--thorin-spacing-2);
-        }
-        .profile .row-1 .links {
-            height: 100%;
-            display: flex;
-            justify-content: flex-end;
-            align-items: start;
-            gap: var(--thorin-spacing-2);
-            flex-grow: 1;
-        }
-        .profile .row-1 .subtext {
-            color: var(--thorin-text-secondary);
-            font-size: 0.75em;
-        }
-    `;
+    static override styles = [
+        styles.base,
+        css`
+            .connected {
+                display: flex;
+                flex-direction: column;
+                gap: var(--thorin-spacing-2);
+            }
+            .connector {
+                padding: var(--thorin-spacing-4);
+                border: 1px solid var(--thorin-border);
+                border-radius: var(--thorin-radius-card);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 8px;
+            }
+            .connector-internal {
+                display: flex;
+                align-items: center;
+                gap: var(--thorin-spacing-2);
+            }
+            .connector-image {
+                width: 24px;
+                height: 24px;
+                border-radius: 4px;
+                overflow: hidden;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .connector-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+            .profile {
+                border: 1px solid var(--thorin-border);
+                border-radius: var(--thorin-radius-card);
+                padding: var(--thorin-spacing-4);
+                display: flex;
+                flex-direction: column;
+                gap: var(--thorin-spacing-2);
+            }
+            .profile .row-1 {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: var(--thorin-spacing-2);
+            }
+            .profile .row-1 .left {
+                display: flex;
+                align-items: center;
+                gap: var(--thorin-spacing-2);
+            }
+            .profile .row-1 .links {
+                height: 100%;
+                display: flex;
+                justify-content: flex-end;
+                align-items: start;
+                gap: var(--thorin-spacing-2);
+                flex-grow: 1;
+            }
+            .profile .row-1 .subtext {
+                color: var(--thorin-text-secondary);
+                font-size: 0.75em;
+            }
+        `,
+    ];
 
     @property({ type: Object })
     connector: Connector;
