@@ -2,6 +2,7 @@
 /* eslint-disable sonarjs/no-identical-functions */
 /* eslint-disable unicorn/no-nested-ternary */
 import 'webcomponent-qr-code';
+import './connected';
 
 // import { walletConnect } from '@wagmi/connectors';
 import {
@@ -13,9 +14,9 @@ import {
     connect,
     disconnect,
     getAccount,
+    getConnections,
     getConnectors,
 } from '@wagmi/core';
-// import { mainnet } from '@wagmi/core/chains';
 import { css, html, LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 
@@ -51,9 +52,14 @@ export class ThorinConnectModal extends LitElement {
 
     static override styles = css`
         .button-list {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
+            display: grid;
+            // auto height make everything equal height
+            grid-template-columns: 1fr; /* One column */
+            grid-auto-rows: minmax(
+                min-content,
+                max-content
+            ); /* Automatically size rows */
+            gap: var(--thorin-spacing-2);
         }
         .connecting-to {
             aspect-ratio: 1/1;
@@ -64,12 +70,13 @@ export class ThorinConnectModal extends LitElement {
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 4px;
+            gap: var(--thorin-spacing-2);
         }
         .connecting-to img {
             width: 48px;
             height: 48px;
             border-radius: 4px;
+            object-fit: contain;
         }
         .connector-name {
             font-weight: 600;
@@ -126,6 +133,8 @@ export class ThorinConnectModal extends LitElement {
             margin: 0 auto;
             background: var(--thorin-background-secondary);
             border-radius: var(--thorin-radius-card);
+            padding: var(--thorin-spacing-4);
+            box-sizing: border-box;
         }
         @media (max-width: 576px) {
             .connecting {
@@ -135,13 +144,14 @@ export class ThorinConnectModal extends LitElement {
         .connecting .box {
             width: 32px;
             height: 32px;
-            border-radius: var(--thorin-radius-card);
+            border-radius: 4px;
             background: var(--thorin-background-secondary);
             overflow: hidden;
         }
         .connecting .box img {
             width: 100%;
             height: 100%;
+            object-fit: contain;
         }
         .name {
             font-weight: 600;
@@ -175,7 +185,7 @@ export class ThorinConnectModal extends LitElement {
         | 'reconnecting' = 'disconnected';
 
     override updated() {
-        //     // this.updateWagmiState();
+        // this.updateWagmiState();
         console.log('updated');
     }
 
@@ -296,16 +306,15 @@ export class ThorinConnectModal extends LitElement {
                                     </div>`
                                   : ''}
                           </div>`}
-                    ${isConnected
+                    ${isConnected && this.activeConnector
                         ? html`
-                              <div class="connected">
-                                  <div class="connector-name">
-                                      ${this.activeConnector?.name}
-                                  </div>
-                                  <div class="connector-name">
-                                      ${JSON.stringify(account.address)}
-                                  </div>
-                              </div>
+                              <thorin-connect-modal-connected
+                                  .address=${account.address}
+                                  .connector=${this.activeConnector}
+                                  .requestDisconnect=${() => {
+                                      this.disconnect();
+                                  }}
+                              ></thorin-connect-modal-connected>
                           `
                         : ''}
                     ${isErrored
@@ -317,7 +326,6 @@ export class ThorinConnectModal extends LitElement {
                           `
                         : ''}
                     ${[
-                        isConnected,
                         isReconnecting,
                         isLoading,
                         isErrored,
@@ -437,30 +445,29 @@ export class ThorinConnectModal extends LitElement {
         console.log('Disconnect Requested!');
         this.showQR = undefined;
         this.activeConnector = undefined;
+        this.currentAccount = undefined;
+        this.status = 'disconnected';
 
-        disconnect(wagmiConfig)
-            .then(() => {
-                console.log('disconnected');
-            })
-            .catch((error) => {
-                console.log('failed to disconnect', error);
-                this.activeConnector = undefined;
-            })
-            .finally(() => {
-                console.log('disconnected wagmi');
-                this.activeConnector = undefined;
-                this.status = 'disconnected';
-                this.updateWagmiState();
-            });
+        const connections = getConnections(wagmiConfig);
 
-        this.updateWagmiState();
+        for (const connection of connections) {
+            const { connector } = connection;
+
+            disconnect(wagmiConfig, { connector })
+                .then(() => {
+                    console.log('disconnected');
+                })
+                .catch((error) => {
+                    console.log('failed to disconnect', error);
+                })
+                .finally(() => {
+                    console.log('disconnected wagmi');
+                });
+        }
     }
 
     async updateWagmiState() {
         const wagmiConfig = getWagmiConfig();
-
-        // const _active = getClient(wagmiConfig);
-        console.log({ open: this.open });
 
         if (!this.open) return;
 
@@ -477,8 +484,14 @@ export class ThorinConnectModal extends LitElement {
             this.status = account?.status;
         }
 
-        if (this.activeConnector != account.connector && account.isConnected) {
-            this.activeConnector = account.connector;
+        const connections = getConnections(wagmiConfig);
+
+        const connector = account?.connector;
+
+        this.activeConnector = connector;
+
+        if (connections.length > 0) {
+            console.log({ connections });
         }
 
         if (
@@ -486,14 +499,13 @@ export class ThorinConnectModal extends LitElement {
             wagmiConfig.state?.connections?.size === 0 ||
             wagmiConfig.connectors?.length === 0
         ) {
-            return;
+            //
         }
-
-        console.log({ status: wagmiConfig?.state?.status });
     }
 }
 
 declare global {
+    // eslint-disable-next-line unused-imports/no-unused-vars
     interface HTMLElementTagNameMap {
         'thorin-connect-modal': ThorinConnectModal;
     }
