@@ -48,7 +48,7 @@ export class ThorinModal extends LitElement {
         .modal {
             transition: all 250ms cubic-bezier(0.075, 0.82, 0.165, 1);
             background: var(--thorin-background-primary);
-            border-radius: var(--thorin-radius-card);
+            border-radius: var(--thorin-radius-modal);
             max-width: 100vw;
 
             width: var(--max-width);
@@ -67,11 +67,12 @@ export class ThorinModal extends LitElement {
             height: fit-content;
             min-width: 360px; /** Modal Min Width */
 
-            padding: var(--thorin-spacing-2);
+            padding: var(--thorin-spacing-6);
             position: absolute;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
+            box-sizing: border-box;
         }
         .title {
             text-align: center;
@@ -93,13 +94,22 @@ export class ThorinModal extends LitElement {
             position: absolute;
             top: 0;
             right: 0;
-            padding: var(--thorin-spacing-2) var(--thorin-spacing-4);
-            margin-x: var(--thorin-spacing-2);
+            padding: var(--thorin-spacing-2);
+            margin: var(--thorin-spacing-2);
+            border-radius: 50%;
             cursor: pointer;
             background: none;
             border: none;
             font-size: 20px;
             color: var(--thorin-text-secondary);
+        }
+        .close:hover {
+            background: var(--thorin-background-secondary);
+        }
+        .close-icon {
+            width: 16px;
+            height: 16px;
+            display: block;
         }
         /* Modal Breakpoint */
         @media (max-width: 576px) {
@@ -151,7 +161,21 @@ export class ThorinModal extends LitElement {
                                           }}"
                                           class="close"
                                       >
-                                          x
+                                          <svg
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              fill="currentColor"
+                                              viewBox="0 0 96 96"
+                                              width="1em"
+                                              height="1em"
+                                              focusable="false"
+                                              shape-rendering="geometricPrecision"
+                                              class="close-icon"
+                                          >
+                                              <path
+                                                  fill="currentColor"
+                                                  d="M17.757 26.243a6 6 0 1 1 8.486-8.486L48 39.515l21.757-21.758a6 6 0 1 1 8.486 8.486L56.485 48l21.758 21.757a6 6 0 1 1-8.486 8.486L48 56.485 26.243 78.243a6 6 0 1 1-8.486-8.486L39.515 48 17.757 26.243Z"
+                                              ></path>
+                                          </svg>
                                       </button>`
                                     : ''
                             }
@@ -171,7 +195,7 @@ export class ThorinModal extends LitElement {
         const modal = this.shadowRoot?.querySelector('.modal');
         const modalContent = this.shadowRoot?.querySelector('.content');
         const resizeObserver = new ResizeObserver((entries) => {
-            const padding = 16;
+            const padding = 24;
 
             for (const entry of entries) {
                 const { height, width } = entry.contentRect;

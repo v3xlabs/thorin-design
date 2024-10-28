@@ -106,6 +106,9 @@ export class ThorinConnectModal extends LitElement {
             .space-y-2 > *:last-child {
                 margin-top: var(--thorin-spacing-2);
             }
+            .space-y-2 > *:first-child {
+                margin-top: 0;
+            }
             .connector {
                 display: flex;
                 justify-content: center;

@@ -26,17 +26,17 @@ export class ThorinConnectModalConnected extends LitElement {
             .connected {
                 display: flex;
                 flex-direction: column;
-                gap: var(--thorin-spacing-2);
+                gap: var(--thorin-spacing-4);
                 font-size: 1rem;
             }
             .connector {
-                padding: var(--thorin-spacing-2);
+                padding: var(--thorin-spacing-4);
                 border: 1px solid var(--thorin-border);
                 border-radius: var(--thorin-radius-card);
                 gap: var(--thorin-spacing-2);
                 display: flex;
                 align-items: center;
-                flex-direction: column;
+                justify-content: space-between;
             }
             .connector-internal {
                 display: flex;
@@ -44,7 +44,6 @@ export class ThorinConnectModalConnected extends LitElement {
                 gap: var(--thorin-spacing-2);
             }
             .disconnect-btn {
-                width: 100%;
             }
             .connector-image {
                 width: 24px;
@@ -63,16 +62,16 @@ export class ThorinConnectModalConnected extends LitElement {
             .profile {
                 border: 1px solid var(--thorin-border);
                 border-radius: var(--thorin-radius-card);
-                padding: var(--thorin-spacing-2);
+                padding: var(--thorin-spacing-4);
                 display: flex;
                 flex-direction: column;
-                gap: var(--thorin-spacing-2);
+                gap: var(--thorin-spacing-4);
             }
             .profile .row-1 {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                gap: var(--thorin-spacing-2);
+                gap: var(--thorin-spacing-4);
                 font-size: 1.1em;
             }
             .profile .row-1 .left {
@@ -91,6 +90,15 @@ export class ThorinConnectModalConnected extends LitElement {
             .profile .row-1 .subtext {
                 color: var(--thorin-text-secondary);
                 font-size: 0.75em;
+            }
+            .external-link-icon {
+                width: 16px;
+                height: 16px;
+                display: block;
+                color: var(--thorin-text-secondary);
+            }
+            .external-link-icon:hover {
+                color: var(--thorin-blue-primary);
             }
         `,
     ];
@@ -123,22 +131,23 @@ export class ThorinConnectModalConnected extends LitElement {
                             />
                         </div>`}
                         <span>
-                            Connected via <b>${this.connector?.name}</b>
+                            <b>${this.connector?.name}</b>
                         </span>
                     </div>
                     <div class="disconnect-btn">
                         <thorin-button
                             variant="subtle"
-                            width="full"
+                            width="auto"
                             .onClick="${() => {
                                 this.requestDisconnect();
                             }}"
-                            >Disconnect</thorin-button
                         >
+                            Disconnect
+                        </thorin-button>
                     </div>
                 </div>
 
-                <div class="space-y-2 max-w-xl">
+                <div class="max-w-xl">
                     <div class="profile">
                         <div class="row-1">
                             <div class="left">
@@ -169,8 +178,27 @@ export class ThorinConnectModalConnected extends LitElement {
                                     target="_blank"
                                     href="https://etherscan.io/address/${this
                                         .address}"
-                                    >X</a
                                 >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="currentColor"
+                                        viewBox="0 0 96 96"
+                                        width="1em"
+                                        height="1em"
+                                        focusable="false"
+                                        shape-rendering="geometricPrecision"
+                                        class="external-link-icon"
+                                    >
+                                        <path
+                                            fill="currentColor"
+                                            d="M50 4a6 6 0 0 0 0 12h21.515L33.757 53.757a6 6 0 1 0 8.486 8.486L80 24.485V46a6 6 0 0 0 12 0V10a6 6 0 0 0-6-6H50Z"
+                                        ></path>
+                                        <path
+                                            fill="currentColor"
+                                            d="M16 42a6 6 0 0 1 6-6h8a6 6 0 0 0 0-12h-8c-9.941 0-18 8.059-18 18v32c0 9.941 8.059 18 18 18h32c9.941 0 18-8.059 18-18v-8a6 6 0 0 0-12 0v8a6 6 0 0 1-6 6H22a6 6 0 0 1-6-6V42Z"
+                                        ></path>
+                                    </svg>
+                                </a>
                             </div>
                         </div>
                     </div>

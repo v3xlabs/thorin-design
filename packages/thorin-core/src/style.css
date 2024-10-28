@@ -109,9 +109,11 @@ html {
     --thorin-spacing-1: 4px;
     --thorin-spacing-2: 8px;
     --thorin-spacing-4: 16px;
+    --thorin-spacing-6: 24px;
 
     --thorin-radius-button: 8px;
     --thorin-radius-card: 16px;
+    --thorin-radius-modal: 24px;
     --thorin-radius-tag: 14px;
     --thorin-radius-label: 4px;
 }
