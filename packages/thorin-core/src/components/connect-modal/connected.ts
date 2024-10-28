@@ -2,6 +2,7 @@ import { formatAddress } from '@ens-tools/format';
 import type { Connector } from '@wagmi/core';
 import { css, html, LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
+import { match, P } from 'ts-pattern';
 import type { Address } from 'viem';
 
 import { customElement } from '../../internal/component';
@@ -138,18 +139,25 @@ export class ThorinConnectModalConnected extends LitElement {
                             <div class="left">
                                 ${this.ensdata?.avatar &&
                                 html`<thorin-avatar
-                                    .name=${'luc.eth'}
+                                    .name=${this.ensdata.name}
                                 ></thorin-avatar>`}
-                                <div>
-                                    <div>
-                                        ${this.ensdata?.name ||
-                                        formatAddress(this.address)}
-                                    </div>
-                                    ${this.ensdata?.name &&
-                                    html`<div class="subtext">
-                                        ${formatAddress(this.address)}
-                                    </div>`}
-                                </div>
+                                ${match(this.ensdata)
+                                    .with(
+                                        { name: P.string },
+                                        () => html`<div>
+                                            <div>${this.ensdata.name}</div>
+                                            <div class="subtext">
+                                                ${formatAddress(this.address)}
+                                            </div>
+                                        </div>`
+                                    )
+                                    .otherwise(
+                                        () => html`<div>
+                                            <div>
+                                                ${formatAddress(this.address)}
+                                            </div>
+                                        </div>`
+                                    )}
                             </div>
                             <div class="links">
                                 <a

@@ -30,6 +30,7 @@
         "@rollup/plugin-json": "^6.1.0",
         "lit": "^3.1.2",
         "rollup-plugin-peer-deps-external": "^2.2.4",
+        "ts-pattern": "^5.5.0",
         "webcomponent-qr-code": "^1.2.0"
     },
     "devDependencies": {
