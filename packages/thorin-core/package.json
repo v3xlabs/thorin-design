@@ -1,6 +1,6 @@
 {
     "name": "@ens-tools/thorin-core",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "type": "module",
     "main": "./dist/esm/index.js",
     "types": "./dist/types/index.d.ts",
@@ -19,6 +19,7 @@
     },
     "scripts": {
         "build": "tsc --build && cp ./src/style.css ./dist/style.css",
+        "dev": "tsc --build --watch",
         "lint": "eslint -c .eslintrc.json --ext .ts ./src"
     },
     "keywords": [],

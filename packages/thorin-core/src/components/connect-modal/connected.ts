@@ -27,20 +27,24 @@ export class ThorinConnectModalConnected extends LitElement {
                 display: flex;
                 flex-direction: column;
                 gap: var(--thorin-spacing-2);
+                font-size: 1rem;
             }
             .connector {
-                padding: var(--thorin-spacing-4);
+                padding: var(--thorin-spacing-2);
                 border: 1px solid var(--thorin-border);
                 border-radius: var(--thorin-radius-card);
+                gap: var(--thorin-spacing-2);
                 display: flex;
-                justify-content: space-between;
                 align-items: center;
-                gap: 8px;
+                flex-direction: column;
             }
             .connector-internal {
                 display: flex;
                 align-items: center;
                 gap: var(--thorin-spacing-2);
+            }
+            .disconnect-btn {
+                width: 100%;
             }
             .connector-image {
                 width: 24px;
@@ -59,7 +63,7 @@ export class ThorinConnectModalConnected extends LitElement {
             .profile {
                 border: 1px solid var(--thorin-border);
                 border-radius: var(--thorin-radius-card);
-                padding: var(--thorin-spacing-4);
+                padding: var(--thorin-spacing-2);
                 display: flex;
                 flex-direction: column;
                 gap: var(--thorin-spacing-2);
@@ -69,6 +73,7 @@ export class ThorinConnectModalConnected extends LitElement {
                 justify-content: space-between;
                 align-items: center;
                 gap: var(--thorin-spacing-2);
+                font-size: 1.1em;
             }
             .profile .row-1 .left {
                 display: flex;
@@ -121,7 +126,7 @@ export class ThorinConnectModalConnected extends LitElement {
                             Connected via <b>${this.connector?.name}</b>
                         </span>
                     </div>
-                    <div>
+                    <div class="disconnect-btn">
                         <thorin-button
                             variant="subtle"
                             width="full"

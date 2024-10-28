@@ -67,7 +67,7 @@ export class ThorinModal extends LitElement {
             height: fit-content;
             min-width: 360px; /** Modal Min Width */
 
-            padding: var(--thorin-spacing-4);
+            padding: var(--thorin-spacing-2);
             position: absolute;
             left: 50%;
             top: 50%;
@@ -77,7 +77,7 @@ export class ThorinModal extends LitElement {
             text-align: center;
             font-weight: bold;
             font-size: 20px;
-            padding-bottom: var(--thorin-spacing-2);
+            padding-bottom: var(--thorin-spacing-4);
         }
         dialog::backdrop {
             background-image: linear-gradient(
