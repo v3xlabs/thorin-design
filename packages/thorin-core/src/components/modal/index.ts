@@ -136,10 +136,7 @@ export class ThorinModal extends LitElement {
             .content {
                 width: 100%;
                 min-width: 0;
-                max-width: calc(
-                    calc(100% - var(--thorin-spacing-2)) -
-                        var(--thorin-spacing-4)
-                );
+                max-width: 100%;
             }
         }
     `;
