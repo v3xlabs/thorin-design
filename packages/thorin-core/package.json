@@ -1,6 +1,6 @@
 {
     "name": "@ens-tools/thorin-core",
-    "version": "0.0.3-1",
+    "version": "0.0.5",
     "type": "module",
     "main": "./dist/esm/index.js",
     "types": "./dist/types/index.d.ts",
@@ -25,10 +25,13 @@
     "author": "V3X Labs BV.",
     "license": "LGPL-3.0-only",
     "dependencies": {
+        "@ens-tools/format": "^0.0.3",
         "@rollup/plugin-commonjs": "^25.0.7",
         "@rollup/plugin-json": "^6.1.0",
         "lit": "^3.1.2",
-        "rollup-plugin-peer-deps-external": "^2.2.4"
+        "rollup-plugin-peer-deps-external": "^2.2.4",
+        "ts-pattern": "^5.5.0",
+        "webcomponent-qr-code": "^1.2.0"
     },
     "devDependencies": {
         "@rollup/plugin-node-resolve": "^15.2.3",

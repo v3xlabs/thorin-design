@@ -1,7 +1,9 @@
 /* eslint-disable sonarjs/no-nested-template-literals */
 /* eslint-disable unicorn/template-indent */
 import { css, html, LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+
+import { customElement } from '../../internal/component';
 
 @customElement('thorin-avatar')
 export class ThorinAvatar extends LitElement {

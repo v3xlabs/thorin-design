@@ -1,4 +1,4 @@
-import type { ThorinButton } from '@ens-tools/thorin-core';
+import { ThorinButton } from '@ens-tools/thorin-core';
 import type { DOMAttributes } from 'react';
 
 // export const ThorinButton = createComponent({
