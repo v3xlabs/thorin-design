@@ -6,16 +6,7 @@
         <title>Thorin Design System</title>
     </head>
     <body>
-        <div
-            style="
-                display: flex;
-                flex-direction: column;
-                gap: 4px;
-                max-width: 765px;
-                margin: 0 auto;
-            "
-            class="space-y-4"
-        >
+        <div class="main">
             <div class="m-width">
                 <div>
                     <h1>thorin.design</h1>
@@ -97,9 +88,6 @@
                     <thorin-button onClick="openconnectmodal()"
                         >Open Connect Modal</thorin-button
                     >
-                    <thorin-button onClick="fakeconnect()"
-                        >Open Connect Modal</thorin-button
-                    >
                 </div>
             </div>
         </div>
@@ -116,23 +104,26 @@
                 </thorin-button>
             </div>
         </thorin-modal>
-        <thorin-connect-modal id="connectmodal">
-        </thorin-connect-modal>
+        <thorin-connect-modal id="connectmodal"> </thorin-connect-modal>
         <script src="./index.ts" type="module"></script>
         <script>
             function opentestmodal() {
                 document.getElementById("testmodal").open = true;
-                document.getElementById("testmodal").addEventListener("onClose", () => {
-                    console.log("modal closed");
-                    document.getElementById("testmodal").open = false;
-                });
+                document
+                    .getElementById("testmodal")
+                    .addEventListener("onClose", () => {
+                        console.log("modal closed");
+                        document.getElementById("testmodal").open = false;
+                    });
             }
             function openconnectmodal() {
                 document.getElementById("connectmodal").open = true;
-                document.getElementById("connectmodal").addEventListener("onClose", () => {
-                    console.log("connectmodal closed");
-                    document.getElementById("connectmodal").open = false;
-                });
+                document
+                    .getElementById("connectmodal")
+                    .addEventListener("onClose", () => {
+                        console.log("connectmodal closed");
+                        document.getElementById("connectmodal").open = false;
+                    });
             }
 
             let height = 5;
@@ -145,11 +136,19 @@
             }
         </script>
         <style>
-            html, body {
+            html,
+            body {
                 margin: 0;
                 padding: 0;
                 height: 100%;
                 font-size: 16px;
+            }
+            .main {
+                display: flex;
+                flex-direction: column;
+                gap: var(--thorin-spacing-2);
+                max-width: 765px;
+                margin: 0 auto;
             }
             .card {
                 padding: var(--thorin-spacing-4);
