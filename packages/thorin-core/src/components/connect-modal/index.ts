@@ -160,6 +160,9 @@ export class ThorinConnectModal extends LitElement {
     ];
 
     @state()
+    config: Config;
+
+    @state()
     connections: Connection[] = [];
 
     @state()
@@ -188,13 +191,14 @@ export class ThorinConnectModal extends LitElement {
         window.addEventListener(
             'wagmiConfigChangedThorin',
             ({ detail }: CustomEvent<Config>) => {
+                this.config = detail;
                 this.updateWagmiState(detail);
             }
         );
     }
 
     override render() {
-        const wagmiConfig = getWagmiConfig();
+        const wagmiConfig = this.config || getWagmiConfig();
         const account = wagmiConfig // && wagmiConfig?.state
             ? getAccount(wagmiConfig)
             : undefined;
@@ -363,7 +367,7 @@ export class ThorinConnectModal extends LitElement {
     }
 
     _connect(connector: Connector) {
-        const wagmiConfig = getWagmiConfig();
+        const wagmiConfig = this.config || getWagmiConfig();
 
         console.log(connector);
         this.status = 'connecting';
@@ -445,7 +449,7 @@ export class ThorinConnectModal extends LitElement {
     }
 
     disconnect() {
-        const wagmiConfig = getWagmiConfig();
+        const wagmiConfig = this.config || getWagmiConfig();
 
         console.log('Disconnect Requested!');
         this.showQR = undefined;
