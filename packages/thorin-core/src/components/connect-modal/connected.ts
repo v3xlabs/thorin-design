@@ -15,6 +15,10 @@ type ENSData = {
     records: Record<string, string>;
 };
 
+type ENSDataError = {
+    address: Address;
+};
+
 @customElement('thorin-connect-modal-connected')
 export class ThorinConnectModalConnected extends LitElement {
     @property({ type: String, reflect: true })
@@ -114,7 +118,17 @@ export class ThorinConnectModalConnected extends LitElement {
     @state()
     ensdata: ENSData | undefined;
 
+    @state()
+    ensdata_error: ENSDataError | undefined;
+
     override updated() {
+        if (!this.address) return;
+
+        if (this.ensdata && this.ensdata.address === this.address) return;
+
+        if (this.ensdata_error && this.ensdata_error.address === this.address)
+            return;
+
         this._fetchENS(this.address);
     }
 
@@ -212,11 +226,16 @@ export class ThorinConnectModalConnected extends LitElement {
     async _fetchENS(address: Address | undefined) {
         if (!address || this.ensdata?.address == address) return;
 
-        const data = await fetch('https://enstate.rs/a/' + address);
-        const json = await data.json();
+        try {
+            const data = await fetch('https://enstate.rs/a/' + address);
+            const json = await data.json();
 
-        console.log(json);
-        this.ensdata = json;
+            console.log(json);
+            this.ensdata = json;
+        } catch (error) {
+            console.log('Failed to fetch ens data for', error);
+            this.ensdata_error = { address };
+        }
     }
 }
 
