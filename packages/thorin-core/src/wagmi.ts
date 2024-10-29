@@ -21,6 +21,8 @@ export const setupConfig = (config: Config | (() => Config)) => {
     );
     globalThing.config = typeof config === 'function' ? config() : config;
     window.dispatchEvent(
-        new CustomEvent('wagmiConfigChangedThorin', { detail: config })
+        new CustomEvent('wagmiConfigChangedThorin', {
+            detail: globalThing.config,
+        })
     );
 };

@@ -5,6 +5,7 @@ import 'webcomponent-qr-code';
 import './connected';
 
 import {
+    type Config,
     type Connection,
     type Connector,
     type ConnectorEventMap,
@@ -180,13 +181,16 @@ export class ThorinConnectModal extends LitElement {
 
     override updated() {
         // this.updateWagmiState();
-        console.log('updated');
+        console.log('updated', { acc: this.currentAccount });
     }
 
     override firstUpdated() {
-        window.addEventListener('wagmiConfigChangedThorin', () => {
-            this.updateWagmiState();
-        });
+        window.addEventListener(
+            'wagmiConfigChangedThorin',
+            ({ detail }: CustomEvent<Config>) => {
+                this.updateWagmiState(detail);
+            }
+        );
     }
 
     override render() {
@@ -467,8 +471,8 @@ export class ThorinConnectModal extends LitElement {
         }
     }
 
-    async updateWagmiState() {
-        const wagmiConfig = getWagmiConfig();
+    async updateWagmiState(config?: Config) {
+        const wagmiConfig = config || getWagmiConfig();
 
         if (!this.open) return;
 
@@ -495,13 +499,15 @@ export class ThorinConnectModal extends LitElement {
             console.log({ connections });
         }
 
-        if (
-            !wagmiConfig ||
-            wagmiConfig.state?.connections?.size === 0 ||
-            wagmiConfig.connectors?.length === 0
-        ) {
-            //
-        }
+        // const wagmiConnectors = getConnectors(wagmiConfig);
+
+        // if (
+        //     !wagmiConfig ||
+        //     wagmiConnectors?.length === 0 ||
+        //     wagmiConfig.connectors?.length === 0
+        // ) {
+        //     //
+        // }
     }
 }
 
