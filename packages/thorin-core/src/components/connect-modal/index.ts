@@ -211,7 +211,7 @@ export class ThorinConnectModal extends LitElement {
         const isErrored = this.status === 'errored';
         const isReconnecting = this.status === 'reconnecting';
 
-        const connectors = getConnectors(wagmiConfig);
+        const connectors = wagmiConfig && getConnectors(wagmiConfig);
 
         console.log({ account });
 
