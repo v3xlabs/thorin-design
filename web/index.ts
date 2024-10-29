@@ -2,7 +2,7 @@ import { setupConfig } from '@ens-tools/thorin-core';
 import '@ens-tools/thorin-core/style.css';
 import 'webcomponent-qr-code';
 import { mainnet, sepolia } from 'wagmi/chains';
-import { createConfig, http, injected } from '@wagmi/core'
+import { createConfig, createStorage, http, injected } from '@wagmi/core'
 import { walletConnect } from '@wagmi/connectors';
 
 const config = createConfig(
@@ -17,6 +17,7 @@ const config = createConfig(
                 showQrModal: false,
             }),
         ],
+        storage: createStorage({ storage: window.localStorage }), 
         transports: {
             [mainnet.id]: http(),
             [sepolia.id]: http(),

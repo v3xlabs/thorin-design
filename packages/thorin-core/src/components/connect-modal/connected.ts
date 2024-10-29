@@ -73,6 +73,7 @@ export class ThorinConnectModalConnected extends LitElement {
                 align-items: center;
                 gap: var(--thorin-spacing-4);
                 font-size: 1.1em;
+                line-height: 1.3;
             }
             .profile .row-1 .left {
                 display: flex;
@@ -90,6 +91,7 @@ export class ThorinConnectModalConnected extends LitElement {
             .profile .row-1 .subtext {
                 color: var(--thorin-text-secondary);
                 font-size: 0.75em;
+                line-height: 1.1;
             }
             .external-link-icon {
                 width: 16px;

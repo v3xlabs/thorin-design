@@ -4,9 +4,7 @@
 import 'webcomponent-qr-code';
 import './connected';
 
-// import { walletConnect } from '@wagmi/connectors';
 import {
-    type Config,
     type Connection,
     type Connector,
     type ConnectorEventMap,
@@ -22,18 +20,7 @@ import { property, state } from 'lit/decorators.js';
 
 import { customElement } from '../../internal/component';
 import { styles } from '../../styles';
-
-let getWagmiConfig = () => ({} as Config);
-
-export const setupConfig = (config: Config | (() => Config)) => {
-    console.log(
-        '%c[Thorin Connect]',
-        'color: #3396ff',
-        'Setting up config',
-        config
-    );
-    getWagmiConfig = typeof config === 'function' ? config : () => config;
-};
+import { getWagmiConfig } from '../../wagmi.js';
 
 const wcLog = (event: string, ...data: (string | object)[]) => {
     console.log(
@@ -196,12 +183,17 @@ export class ThorinConnectModal extends LitElement {
         console.log('updated');
     }
 
+    override firstUpdated() {
+        window.addEventListener('wagmiConfigChangedThorin', () => {
+            this.updateWagmiState();
+        });
+    }
+
     override render() {
         const wagmiConfig = getWagmiConfig();
-        const account =
-            wagmiConfig && wagmiConfig?.state
-                ? getAccount(wagmiConfig)
-                : undefined;
+        const account = wagmiConfig // && wagmiConfig?.state
+            ? getAccount(wagmiConfig)
+            : undefined;
 
         const isWalletConnect = this.activeConnector?.type === 'walletConnect';
 
@@ -212,6 +204,8 @@ export class ThorinConnectModal extends LitElement {
         const isReconnecting = this.status === 'reconnecting';
 
         const connectors = getConnectors(wagmiConfig);
+
+        console.log({ account });
 
         return html`
             <thorin-modal
