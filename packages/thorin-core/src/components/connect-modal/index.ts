@@ -205,11 +205,13 @@ export class ThorinConnectModal extends LitElement {
 
         const isWalletConnect = this.activeConnector?.type === 'walletConnect';
 
-        const isLoading = this.status === 'connecting';
-        const isDisconnected = this.status === 'disconnected';
-        const isConnected = this.status === 'connected';
+        const isLoading = account?.isConnecting || this.status === 'connecting';
+        const isDisconnected =
+            account?.isDisconnected || this.status === 'disconnected';
+        const isConnected = account?.isConnected || this.status === 'connected';
         const isErrored = this.status === 'errored';
-        const isReconnecting = this.status === 'reconnecting';
+        const isReconnecting =
+            account?.isReconnecting || this.status === 'reconnecting';
 
         const connectors = wagmiConfig && getConnectors(wagmiConfig);
 
